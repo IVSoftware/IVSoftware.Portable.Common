@@ -1,9 +1,61 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<Title>IVSoftware.Portable.Common</Title>
+		<PackageId>IVSoftware.Portable.Common</PackageId>
+		<RootNamespace>IVSoftware.Portable.Common</RootNamespace>
+		<Description>
+			Shared exception-signaling primitives and metadata attributes used throughout the IVSoftware Portable suite.
+			Provides controlled Throw/Advisory pathways and caller-aware diagnostics suitable for Release-mode packages.
+		</Description>
+		<PackageTags>common;exceptions;diagnostics;attributes;portable;cross-platform</PackageTags>
+		<RepositoryUrl>https://github.com/IVSoftware/IVSoftware.Portable.Common.git</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/IVSoftware/IVSoftware.Portable.Common.git</PackageProjectUrl>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Author>Thomas C. Gregor</Author>
+		<Owner>IVSoftware LLC</Owner>
+		<Copyright>Copyright © 2025 IVSoftware LLC</Copyright>
+		<FileVersion>$(AssemblyVersion)</FileVersion>
+		<Version>$(AssemblyVersion)</Version>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+
+		<PackageReleaseNotes>
+			Initial 1.0.0 release
+			- Provides foundational exception and advisory signaling for Release-mode packages.
+			- Includes metadata attributes shared across IVSoftware NuGet packages.
+		</PackageReleaseNotes>
+
+		<AssemblyOriginatorKeyFile>D:\PFX\231201.ivs.pfx</AssemblyOriginatorKeyFile>
+		<DebugType>embedded</DebugType>
+		<BaseVersion>1.0.0</BaseVersion>
+		<VersionPrefix>$(BaseVersion)-local1</VersionPrefix>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<SignAssembly>True</SignAssembly>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="README\**" />
+		<EmbeddedResource Remove="README\**" />
+		<None Remove="README\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- No runtime dependencies required. -->
+	</ItemGroup>
 
 </Project>
+
