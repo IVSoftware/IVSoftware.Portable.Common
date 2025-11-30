@@ -1,4 +1,4 @@
-## IVSoftware.Portable.Common
+## IVSoftware.Portable.Common [GitHub](https://github.com/IVSoftware/IVSoftware.Portable.Common.git)
 
 A small foundational library that provides shared exception-signaling primitives and metadata attributes for the IVSoftware ecosystem.  
 It supports higher-level packages by supplying a consistent, observable way to surface errors, advisories, and diagnostics without requiring Debug builds.
