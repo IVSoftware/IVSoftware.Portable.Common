@@ -293,12 +293,5 @@ namespace IVSoftware.Portable.Common.Exceptions
             }
             return e;
         }
-
-        [Probationary]
-        public static Throw WithAppendThrow(this Throw @this, IThrowable throwable)
-        {
-            throwable.AppendThrow(@this);
-            return @this;
-        }
     }
 }
