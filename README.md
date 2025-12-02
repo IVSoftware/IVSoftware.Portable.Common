@@ -16,10 +16,10 @@ This allows end-user developers (EUDs) to log, intercept, suppress, or escalate 
 
 An enum representing the intent of the signal:
 
-- **ThrowHard** — Standard failure path. Throws unless explicitly suppressed.  
-- **ThrowSoft** — Non-fatal condition. Never throws unless escalated.  
-- **ThrowFramework** — Framework-side fault, defaulting to throw but downgradeable.  
-- **Advisory** — Informational. Never affects control flow.
+- **ThrowHard** - Standard failure path. Throws unless explicitly suppressed.  
+- **ThrowSoft** - Non-fatal condition. Never throws unless escalated.  
+- **ThrowFramework** - Framework-side fault, defaulting to throw but downgradeable.  
+- **Advisory** - Informational. Never affects control flow.
 
 Supporting enums (`ThrowableStatus`, `ThrowToStringFormat`) describe post-raise conditions and how a `Throw` object formats itself.
 
@@ -40,7 +40,7 @@ Each call:
 - Captures the caller identity.  
 - Wraps the exception in a `Throw` object that includes an ID, message, and `Handled` flag.  
 - Routes the signal through a static event.  
-- Honors the caller’s choice to suppress or escalate.  
+- Honors the caller's choice to suppress or escalate.  
 - Behaves the same whether running under Debug or Release.
 
 This enables Release-mode diagnostics without relying on `Debug.WriteLine` availability or a Debug-only NuGet variant.
