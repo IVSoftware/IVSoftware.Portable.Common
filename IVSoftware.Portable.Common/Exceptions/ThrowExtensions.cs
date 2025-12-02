@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 
 namespace IVSoftware.Portable.Common.Exceptions
 {
-
     /// <summary>
     /// Extension methods for raising Throw and Advisory events. 
     /// These allow exceptions to be surfaced in a controlled way 
@@ -293,6 +292,13 @@ namespace IVSoftware.Portable.Common.Exceptions
                 Debug.WriteLine(e.FormattedMessage);
             }
             return e;
+        }
+
+        [Probationary]
+        public static Throw WithAppendThrow(this Throw @this, IThrowable throwable)
+        {
+            throwable.AppendThrow(@this);
+            return @this;
         }
     }
 }

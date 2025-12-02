@@ -1,16 +1,10 @@
 ﻿using IVSoftware.Portable.Common.Attributes;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IVSoftware.Portable.Common.Exceptions
 {
-
     /// <summary>
     /// Provides a static entry point for raising exceptions that end-user 
     /// developers can intercept and custom route. For example, in dev's

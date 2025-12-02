@@ -53,9 +53,5 @@
 		</None>
 	</ItemGroup>
 
-	<ItemGroup>
-		<!-- No runtime dependencies required. -->
-	</ItemGroup>
-
 </Project>
 
