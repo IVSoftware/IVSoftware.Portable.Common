@@ -33,7 +33,7 @@
 		<AssemblyOriginatorKeyFile>D:\PFX\231201.ivs.pfx</AssemblyOriginatorKeyFile>
 		<DebugType>embedded</DebugType>
 		<BaseVersion>1.0.0</BaseVersion>
-		<VersionPrefix>$(BaseVersion)-beta</VersionPrefix>
+		<VersionPrefix>$(BaseVersion)-local2</VersionPrefix>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -51,10 +51,6 @@
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-		<!-- No runtime dependencies required. -->
 	</ItemGroup>
 
 </Project>
