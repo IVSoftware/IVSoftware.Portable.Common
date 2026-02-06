@@ -1,7 +1,6 @@
 ## IVSoftware.Portable.Common [GitHub](https://github.com/IVSoftware/IVSoftware.Portable.Common.git)
 
-A small foundational library that provides shared exception-signaling primitives and metadata attributes for the IVSoftware ecosystem.  
-It supports higher-level packages by supplying a consistent, observable way to surface errors, advisories, and diagnostics without requiring Debug builds.
+A small foundational library that provides shared exception-signaling primitives and metadata attributes for the IVSoftware ecosystem. It supports higher-level packages by supplying a consistent, observable way to surface errors, advisories, and diagnostics without requiring Debug builds.
 
 A core purpose of this package is to let **Release-mode NuGet packages** expose services similar to `System.Diagnostics` (e.g., logging, tracing, caller identification, advisory messages) through a controlled signaling channel, without shipping alternate Debug variants.
 

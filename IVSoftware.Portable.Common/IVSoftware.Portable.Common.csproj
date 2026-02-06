@@ -4,6 +4,9 @@
 		<Title>IVSoftware.Portable.Common</Title>
 		<PackageId>IVSoftware.Portable.Common</PackageId>
 		<RootNamespace>IVSoftware.Portable.Common</RootNamespace>
+		<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+		<!--netstandard2.0 does not imply a modern C# version so lock it explicitly-->
+		<LangVersion>latest</LangVersion>
 		<Description>
 			Shared exception-signaling primitives and metadata attributes used throughout the IVSoftware Portable suite.
 			Provides controlled Throw/Advisory pathways and caller-aware diagnostics suitable for Release-mode packages.
@@ -11,7 +14,6 @@
 		<PackageTags>common;exceptions;diagnostics;attributes;portable;cross-platform</PackageTags>
 		<RepositoryUrl>https://github.com/IVSoftware/IVSoftware.Portable.Common.git</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/IVSoftware/IVSoftware.Portable.Common.git</PackageProjectUrl>
-		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -28,12 +30,14 @@
 			Initial 1.0.0 release
 			- Provides foundational exception and advisory signaling for Release-mode packages.
 			- Includes metadata attributes shared across IVSoftware NuGet packages.
+			1.0.0-rc1
+			- ADDED supported framework: netstandard2.0
 		</PackageReleaseNotes>
 
 		<AssemblyOriginatorKeyFile>D:\PFX\231201.ivs.pfx</AssemblyOriginatorKeyFile>
 		<DebugType>embedded</DebugType>
 		<BaseVersion>1.0.0</BaseVersion>
-		<VersionPrefix>$(BaseVersion)-local2</VersionPrefix>
+		<VersionPrefix>$(BaseVersion)-rc1</VersionPrefix>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
