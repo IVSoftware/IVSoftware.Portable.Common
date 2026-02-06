@@ -27,7 +27,7 @@
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 
 		<PackageReleaseNotes>
-			Initial 1.0.0 release
+			Initial 1.0.0-beta release
 			- Provides foundational exception and advisory signaling for Release-mode packages.
 			- Includes metadata attributes shared across IVSoftware NuGet packages.
 			1.0.0-rc1
