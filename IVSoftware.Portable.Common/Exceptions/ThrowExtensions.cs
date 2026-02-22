@@ -1,5 +1,7 @@
 ﻿using IVSoftware.Portable.Common.Attributes;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace IVSoftware.Portable.Common.Exceptions
@@ -62,8 +64,8 @@ namespace IVSoftware.Portable.Common.Exceptions
             {
                 messageOrId = typeof(T).Name;
             }
-            string id = messageOnly is null ? caller! : messageOrId;
-            string msg = messageOnly ?? messageOrId;
+            string? id = messageOnly is null ? caller! : messageOrId;
+            string? msg = messageOnly ?? messageOrId;
 
             var ex = Activator.CreateInstance(typeof(T), [msg]) as Exception ?? new Exception(msg);
             var e = new Throw(ex, id, @throw);
@@ -93,8 +95,8 @@ namespace IVSoftware.Portable.Common.Exceptions
             {
                 messageOrId = ex.GetType().Name;
             }
-            string id = messageOnly is null ? caller! : messageOrId;
-            string msg = messageOnly ?? messageOrId;
+            string? id = messageOnly is null ? caller! : messageOrId;
+            string? msg = messageOnly ?? messageOrId;
             var e = new Throw(ex, id, @throw);
             e.RaiseSelf(sender, e);
             if (!e.Handled && @throw != false)
@@ -135,8 +137,8 @@ namespace IVSoftware.Portable.Common.Exceptions
             {
                 messageOrId = typeof(T).Name;
             }
-            string id = messageOnly is null ? caller! : messageOrId;
-            string msg = messageOnly ?? messageOrId;
+            string? id = messageOnly is null ? caller! : messageOrId;
+            string? msg = messageOnly ?? messageOrId;
 
             var ex = Activator.CreateInstance(typeof(T), [msg]) as Exception ?? new Exception(msg);
             var e = new Throw(ex, id, @throw);
@@ -167,8 +169,8 @@ namespace IVSoftware.Portable.Common.Exceptions
             {
                 messageOrId = ex.GetType().Name;
             }
-            string id = messageOnly is null ? caller! : messageOrId;
-            string msg = messageOnly ?? messageOrId;
+            string? id = messageOnly is null ? caller! : messageOrId;
+            string? msg = messageOnly ?? messageOrId;
             var e = new Throw(ex, id, @throw);
 
             // HANDLED By Default
@@ -204,8 +206,8 @@ namespace IVSoftware.Portable.Common.Exceptions
             {
                 messageOrId = typeof(T).Name;
             }
-            string id = messageOnly is null ? caller! : messageOrId;
-            string msg = messageOnly ?? messageOrId;
+            string? id = messageOnly is null ? caller! : messageOrId;
+            string? msg = messageOnly ?? messageOrId;
 
             var ex = Activator.CreateInstance(typeof(T), [msg]) as Exception ?? new Exception(msg);
             var e = new Throw(ex, id, @throw);
@@ -238,8 +240,8 @@ namespace IVSoftware.Portable.Common.Exceptions
             {
                 messageOrId = ex.GetType().Name;
             }
-            string id = messageOnly is null ? caller! : messageOrId;
-            string msg = messageOnly ?? messageOrId;
+            string? id = messageOnly is null ? caller! : messageOrId;
+            string? msg = messageOnly ?? messageOrId;
             var e = new Throw(ex, id, @throw);
 
             // HANDLED By Default
@@ -292,6 +294,121 @@ namespace IVSoftware.Portable.Common.Exceptions
                 Debug.WriteLine(e.FormattedMessage);
             }
             return e;
+        }
+
+        /// <summary>
+        /// Retrieves a single attribute applied to the enum member.
+        /// </summary>
+        /// <remarks>
+        /// Intended for non-composite enum values.
+        /// 
+        /// If the enum is marked with [Flags] and represents a combined value,
+        /// member resolution via ToString() may not map to a declared field,
+        /// and this method will surface through the Throw channel.
+        /// </remarks>
+        internal static T? GetCustomAttribute<T>(this Enum @this) where T : Attribute
+        {
+            var type = @this.GetType();
+
+            var members = type
+                .GetMember(@this.ToString())
+                .ToArray();
+
+            switch (members.Length)
+            {
+                case 0:
+                    @this.ThrowHard<InvalidOperationException>(
+                        $"Member not found: {type.Name}.{@this}");
+                    return null;
+
+                case 1:
+                    var candidates = members[0]
+                        .GetCustomAttributes(typeof(T), inherit: false)
+                        .Cast<T>()
+                        .ToArray();
+
+                    switch (candidates.Length)
+                    {
+                        case 0:
+                            return null;
+
+                        case 1:
+                            return candidates[0];
+
+                        default:
+                            @this.ThrowHard<InvalidOperationException>(
+                                $"Multiple attributes of type {typeof(T).Name} on {type.Name}.{@this}");
+                            return null;
+                    }
+                default:
+                    @this.ThrowHard<InvalidOperationException>(
+                        $"Member is ambiguous: {type.Name}.{@this}");
+                    return null;
+            }
+        }
+
+        public static Throw ThrowPolicyException(
+            this object? sender,
+            Enum policyMember,
+            [CallerMemberName] string? caller = null)
+        {
+            sender ??= policyMember;
+
+            var enumType = policyMember.GetType();
+
+            // Policy enums must not be [Flags]
+            if (enumType.GetCustomAttribute<FlagsAttribute>() is not null)
+            {
+                return sender.ThrowHard<InvalidOperationException>(
+                    messageOnly: $"Policy enum {enumType.Name} must not be marked with [Flags].",
+                    caller: caller);
+            }
+
+            // Enforcement level
+            var policyEnforcement =
+                policyMember.GetCustomAttribute<PolicyEnforcementAttribute>() is { } attrP
+                ? attrP.Level
+                : ThrowOrAdvise.ThrowHard;
+
+            // Exception type declared at enum level
+            var policyExceptionType =
+                enumType.GetCustomAttribute<PolicyAttribute>() is { } attrE
+                ? attrE.ExceptionType
+                : typeof(InvalidOperationException);
+
+            // Message
+            var msg =
+                policyMember.GetCustomAttribute<DescriptionAttribute>() is { } attrM
+                ? attrM.Description
+                : policyMember.ToString();
+
+            // Stable searchable id
+            var id = $"{enumType.Name}.{policyMember}";
+
+            if (policyEnforcement == ThrowOrAdvise.Advisory)
+            {
+                return sender.Advisory(id, msg, caller);
+            }
+
+            var methodName = policyEnforcement switch
+            {
+                ThrowOrAdvise.ThrowFramework => nameof(ThrowFramework),
+                ThrowOrAdvise.ThrowSoft => nameof(ThrowSoft),
+                _ => nameof(ThrowHard),
+            };
+
+            var method = typeof(ThrowExtensions)
+                .GetMethods(BindingFlags.Public | BindingFlags.Static)
+                .First(m =>
+                    m.Name == methodName &&
+                    m.IsGenericMethodDefinition &&
+                    m.GetGenericArguments().Length == 1);
+
+            var generic = method.MakeGenericMethod(policyExceptionType);
+
+            return (Throw)generic.Invoke(
+                null,
+                new object?[] { sender, id, msg, null, caller })!;
         }
     }
 }

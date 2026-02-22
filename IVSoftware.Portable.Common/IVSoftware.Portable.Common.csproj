@@ -4,11 +4,13 @@
 		<Title>IVSoftware.Portable.Common</Title>
 		<PackageId>IVSoftware.Portable.Common</PackageId>
 		<RootNamespace>IVSoftware.Portable.Common</RootNamespace>
-		<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>		
+		
+		<BaseVersion>1.0.1</BaseVersion>
+		<VersionPrefix>$(BaseVersion)-beta</VersionPrefix>
+		
 		<!--netstandard2.0 does not imply a modern C# version so lock it explicitly-->
 		<LangVersion>latest</LangVersion>
-		<BaseVersion>1.0.0</BaseVersion>
-		<VersionPrefix>$(BaseVersion)</VersionPrefix>
 		
 		<Description>
 			Shared exception-signaling primitives and metadata attributes used throughout the IVSoftware Portable suite.
@@ -37,6 +39,11 @@
 			- ADDED supported framework: netstandard2.0
 			Stable 1.0.0
 			- added missing 'event' keyword to 'BeginThrowOrAdvise'
+			Beta release 1.0.1
+			- Added PolicyAttribute and PolicyEnforcementAttribute for declarative policy metadata.
+			- Introduced ThrowPolicyException extension to route policy violations through canonical Throw/Advisory pathways.
+			- Enforced non-[Flags] constraint for Policy enums to preserve atomic violation semantics.
+			- No breaking changes.
 		</PackageReleaseNotes>
 
 		<AssemblyOriginatorKeyFile>D:\PFX\231201.ivs.pfx</AssemblyOriginatorKeyFile>

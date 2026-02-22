@@ -16,7 +16,7 @@ namespace IVSoftware.Portable.Common.Exceptions
     {
         internal Throw(
             Exception ex,
-            string messageId,
+            string? messageId,
             bool? @throw,
             [CallerMemberName] string? caller = null)
         {
