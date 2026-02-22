@@ -37,7 +37,7 @@ namespace IVSoftware.Portable.Common.Exceptions
         /// </summary>
         internal Action<object?, Throw> RaiseSelf => (o, e) => BeginThrowOrAdvise?.Invoke(o, e);
 
-        public static EventHandler<Throw>? BeginThrowOrAdvise;
+        public static event EventHandler<Throw>? BeginThrowOrAdvise;
         public Exception? Exception { get; }
 
         [Careful("Do 'not' generate automatically.")]
