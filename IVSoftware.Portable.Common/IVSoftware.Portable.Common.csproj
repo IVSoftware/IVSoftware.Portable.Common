@@ -40,10 +40,16 @@
 			Stable 1.0.0
 			- added missing 'event' keyword to 'BeginThrowOrAdvise'
 			Beta release 1.0.1
-			- Added PolicyAttribute and PolicyEnforcementAttribute for declarative policy metadata.
+			- Added [Policy] and [PolicyEnforcement] attributes for declarative policy metadata.
 			- Introduced ThrowPolicyException extension to route policy violations through canonical Throw/Advisory pathways.
 			- Enforced non-[Flags] constraint for Policy enums to preserve atomic violation semantics.
 			- No breaking changes.
+			Release Candidate 1.0.1
+			- Fixed @throw polarity on ThrowFramework
+			- Added [NotFlags] as an opt-in enforcement mechanism for enums that are intended for parsing by field name.
+			- Added [Claim] attribute for linking ReadMe claims to unit tests.
+
+
 		</PackageReleaseNotes>
 
 		<AssemblyOriginatorKeyFile>D:\PFX\231201.ivs.pfx</AssemblyOriginatorKeyFile>
