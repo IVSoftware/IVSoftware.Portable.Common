@@ -3,12 +3,12 @@
     public static class Extensions
     {
         /// <summary>
-        /// Formats an InternalsVisibleTo attribute for the assembly that defines this instance.
+        /// Generates an InternalsVisibleTo declaration for the runtime assembly of the instance.
         /// </summary>
         /// <remarks>
-        /// Emits the full strong-name public key (not the token).
-        /// Throws if the assembly is not strong-named.
-        /// Intended for generating friend assembly declarations.
+        /// - Uses the assembly identity of <c>@this</c> to produce a friend assembly string.
+        /// - Emits the full strong-name public key (not the token) as required by the attribute.
+        /// - Throws if the assembly is not strong-named.
         /// </remarks>
         public static string ToStrongNamedFriendAssembly(this object @this)
         {

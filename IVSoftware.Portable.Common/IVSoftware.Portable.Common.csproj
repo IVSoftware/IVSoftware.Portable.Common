@@ -30,7 +30,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-		<PackageIcon>img\ivs.code-ape.64x64.png</PackageIcon>
+		<PackageIcon>ivs.code-ape.64x64.png</PackageIcon>
 
 		<PackageReleaseNotes>
 			Initial 1.0.0-beta release
@@ -68,7 +68,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="img\ivs.code-ape.64x64.png" >
+		<None Include="..\IVSoftware.Portable.Common\img\ivs.code-ape.64x64.png" >
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
