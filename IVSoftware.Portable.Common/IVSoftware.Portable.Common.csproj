@@ -7,7 +7,7 @@
 		<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>		
 		
 		<BaseVersion>1.0.1</BaseVersion>
-		<VersionPrefix>$(BaseVersion)-beta</VersionPrefix>
+		<VersionPrefix>$(BaseVersion)-rc</VersionPrefix>
 		
 		<!--netstandard2.0 does not imply a modern C# version so lock it explicitly-->
 		<LangVersion>latest</LangVersion>
@@ -30,6 +30,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<PackageIcon>ivs.code-ape.64x64.png</PackageIcon>
 
 		<PackageReleaseNotes>
 			Initial 1.0.0-beta release
@@ -40,10 +41,17 @@
 			Stable 1.0.0
 			- added missing 'event' keyword to 'BeginThrowOrAdvise'
 			Beta release 1.0.1
-			- Added PolicyAttribute and PolicyEnforcementAttribute for declarative policy metadata.
+			- Added [Policy] and [PolicyEnforcement] attributes for declarative policy metadata.
 			- Introduced ThrowPolicyException extension to route policy violations through canonical Throw/Advisory pathways.
 			- Enforced non-[Flags] constraint for Policy enums to preserve atomic violation semantics.
 			- No breaking changes.
+			Release Candidate 1.0.1
+			- Fixed @throw polarity on ThrowFramework
+			- Added [NotFlags] as an opt-in enforcement mechanism for enums that are intended for parsing by field name.
+			- Added [Claim] attribute for linking ReadMe claims to unit tests.
+			- Added Extension: ToStrongNamedFriendAssembly(this object)
+			- ORIGIN: AppDomain TypeCache with basic features.
+
 		</PackageReleaseNotes>
 
 		<AssemblyOriginatorKeyFile>D:\PFX\231201.ivs.pfx</AssemblyOriginatorKeyFile>
@@ -58,6 +66,13 @@
 		<Compile Remove="README\**" />
 		<EmbeddedResource Remove="README\**" />
 		<None Remove="README\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\IVSoftware.Portable.Common\img\ivs.code-ape.64x64.png" >
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>

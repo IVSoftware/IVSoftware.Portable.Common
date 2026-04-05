@@ -214,7 +214,7 @@ namespace IVSoftware.Portable.Common.Exceptions
 
             // ThrowFramework defaults to a hard throw
             // but is downgradeable to soft via @throw.
-            e.Handled = @throw != false;
+            e.Handled = @throw != true;
 
             e.RaiseSelf(sender, e);
 
