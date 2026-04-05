@@ -7,54 +7,26 @@ namespace IVSoftware.Portable.Common.MSTest
     [TestClass]
     public class TestClass_TypeCache
     {
-
         [TestMethod]
         public void Test_TypeCache()
         {
-            string actual, expected;
+            string actual, expected; 
+            
+            foreach (var asmName in typeof(TestClass_TypeCache)
+            .Assembly
+            .GetReferencedAssemblies())
+            {
+                try
+                {
+                    AppDomain.CurrentDomain.Load(asmName);
+                }
+                catch
+                {
+                    // ignore load failures (not all are loadable)
+                }
+            }
 
-            var types = TypeCache.Values;
-
-            actual = JsonConvert.SerializeObject(types, Formatting.Indented);
-            actual.ToClipboardExpected();
-            { }
-            expected = @" 
-[
-  ""Internal.Console, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"",
-  ""Internal.Console+Error, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"",
-  ""IVSoftware.Portable.Common.MSTest.TestClass_Throw, IVSoftware.Portable.Common.MSTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.MSTest.TestClass_TypeCache, IVSoftware.Portable.Common.MSTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Extensions, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.ITypeCache, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.TypeCacheMatchMode, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Common, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.TypeCacheExtensions, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.CanonicalAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.CarefulAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.ProbationaryAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.ScaffoldingAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.UnsupportedAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.IndexerAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.PolicyAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.PolicyEnforcementAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.NotFlagsAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.ClaimAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.Advisory, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.ThrowOrAdvise, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.ThrowableStatus, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.ThrowToStringFormat, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.Throw, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.ThrowExtensions, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.WinOS.MSTest.Extensions.Extensions, IVSoftware.WinOS.MSTest.Extensions, Version=1.0.8.0, Culture=neutral, PublicKeyToken=61187cbbe9faa94a""
-]"
-            ;
-            Assert.AreEqual(
-                expected.NormalizeResult(),
-                actual.NormalizeResult(),
-                "Expecting json serialization to match."
-            );
-
-            "Newtonsoft".AppendNamespaceToCache();
+            var types = TypeCache.Values.Where(_=>_.FullName?.StartsWith("Accessibility") != true);
 
             actual = JsonConvert.SerializeObject(types, Formatting.Indented);
             actual.ToClipboardExpected();
@@ -63,6 +35,7 @@ namespace IVSoftware.Portable.Common.MSTest
 [
   ""Internal.Console, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"",
   ""Internal.Console+Error, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"",
+  ""IVSoftware.Portable.Common.MSTest.TestClass_Extensions, IVSoftware.Portable.Common.MSTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"",
   ""IVSoftware.Portable.Common.MSTest.TestClass_Throw, IVSoftware.Portable.Common.MSTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"",
   ""IVSoftware.Portable.Common.MSTest.TestClass_TypeCache, IVSoftware.Portable.Common.MSTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"",
   ""IVSoftware.Portable.Common.Extensions, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
@@ -87,6 +60,84 @@ namespace IVSoftware.Portable.Common.MSTest
   ""IVSoftware.Portable.Common.Exceptions.Throw, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
   ""IVSoftware.Portable.Common.Exceptions.ThrowExtensions, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
   ""IVSoftware.WinOS.MSTest.Extensions.Extensions, IVSoftware.WinOS.MSTest.Extensions, Version=1.0.8.0, Culture=neutral, PublicKeyToken=61187cbbe9faa94a"",
+  ""IVSoftware.Portable.Disposable.IVisibleIndex, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.AutoObservableCollection`1, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.NotifyCollectionResetEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.CollectionChangedBatchEventHandler, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.NotifyCollectionChangedBatchEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.Clients, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.DHostExtensions, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.DisposableHost, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.BeginUsingEventHandler, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.BeginUsingEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.FinalDisposeEventHandler, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.FinalDisposeEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.CountChangedEventHandler, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.CountChangedEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.TokenDisposedEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.CountChangedAction, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.ObservableMoveCollection`1, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.DisposableHost+DisposableToken, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62""
+]"
+            ;
+            Assert.AreEqual(
+                expected.NormalizeResult(),
+                actual.NormalizeResult(),
+                "Expecting json serialization to match."
+            );
+
+            "Newtonsoft".AppendNamespaceToCache();
+
+            actual = JsonConvert.SerializeObject(types, Formatting.Indented);
+            actual.ToClipboardExpected();
+            { }
+            expected = @" 
+[
+  ""Internal.Console, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"",
+  ""Internal.Console+Error, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"",
+  ""IVSoftware.Portable.Common.MSTest.TestClass_Extensions, IVSoftware.Portable.Common.MSTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.MSTest.TestClass_Throw, IVSoftware.Portable.Common.MSTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.MSTest.TestClass_TypeCache, IVSoftware.Portable.Common.MSTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Extensions, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.ITypeCache, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.TypeCacheMatchMode, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Common, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.TypeCacheExtensions, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Attributes.CanonicalAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Attributes.CarefulAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Attributes.ProbationaryAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Attributes.ScaffoldingAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Attributes.UnsupportedAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Attributes.IndexerAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Attributes.PolicyAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Attributes.PolicyEnforcementAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Attributes.NotFlagsAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Attributes.ClaimAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Exceptions.Advisory, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Exceptions.ThrowOrAdvise, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Exceptions.ThrowableStatus, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Exceptions.ThrowToStringFormat, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Exceptions.Throw, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.Portable.Common.Exceptions.ThrowExtensions, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
+  ""IVSoftware.WinOS.MSTest.Extensions.Extensions, IVSoftware.WinOS.MSTest.Extensions, Version=1.0.8.0, Culture=neutral, PublicKeyToken=61187cbbe9faa94a"",
+  ""IVSoftware.Portable.Disposable.IVisibleIndex, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.AutoObservableCollection`1, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.NotifyCollectionResetEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.CollectionChangedBatchEventHandler, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.NotifyCollectionChangedBatchEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.Clients, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.DHostExtensions, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.DisposableHost, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.BeginUsingEventHandler, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.BeginUsingEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.FinalDisposeEventHandler, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.FinalDisposeEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.CountChangedEventHandler, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.CountChangedEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.TokenDisposedEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.CountChangedAction, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.ObservableMoveCollection`1, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
+  ""IVSoftware.Portable.Disposable.DisposableHost+DisposableToken, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
   ""Newtonsoft.Json.ConstructorHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
   ""Newtonsoft.Json.DateFormatHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
   ""Newtonsoft.Json.DateParseHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",

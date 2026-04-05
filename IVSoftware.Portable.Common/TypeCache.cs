@@ -1,5 +1,6 @@
 ﻿using IVSoftware.Portable.Common.Attributes;
 using System.Collections.ObjectModel;
+using System.Reflection;
 
 namespace IVSoftware.Portable.Common
 {
@@ -38,6 +39,43 @@ namespace IVSoftware.Portable.Common
             _cache = exportedTypes
                 .Where(t => t.FullName is not null)
                 .ToDictionary(t => t.FullName!, t => t);
+
+            AppDomain.CurrentDomain.AssemblyLoad += (sender, e) =>
+            {
+                Type[] types;
+
+                try
+                {
+                    types = e.LoadedAssembly.GetExportedTypes();
+                }
+                catch (ReflectionTypeLoadException rtle)
+                {
+                    types = rtle.Types?.Where(t => t is not null).ToArray()!;
+                }
+                catch
+                {
+                    return; // skip problematic assemblies entirely
+                }
+
+                foreach (var t in types)
+                {
+                    if (t is null) continue;
+
+                    var ns = t.Namespace;
+                    if (ns is null) continue;
+
+                    var isIncluded = Includes.Any(x => ns.StartsWith(x, StringComparison.Ordinal));
+                    var isExcluded = Excludes.Any(x => ns.StartsWith(x, StringComparison.Ordinal));
+
+                    if (!isIncluded && isExcluded)
+                        continue;
+
+                    var fullName = t.FullName;
+                    if (fullName is null) continue;
+
+                    _cache[fullName] = t;
+                }
+            };
         }
 
         internal Dictionary<string, Type> _cache;
@@ -130,13 +168,23 @@ namespace IVSoftware.Portable.Common
             if (includes.Length == 0)
                 return new ReadOnlyDictionary<string, Type>(new Dictionary<string, Type>());
 
+            // Persist includes
+            foreach (var ns in includes)
+            {
+                Includes.Add(ignoreCase ? ns.ToLowerInvariant() : ns);
+            }
+
             var added = AppDomain
                 .CurrentDomain
                 .GetAssemblies()
                 .SelectMany(a => a.GetExportedTypes())
                 .Where(t =>
-                    t.Namespace is not null &&
-                    includes.Any(x => t.Namespace.StartsWith(x, comparison)))
+                {
+                    var ns = t.Namespace;
+                    if (ns is null) return false;
+
+                    return includes.Any(x => ns.StartsWith(x, comparison));
+                })
                 .Where(t => t.FullName is not null)
                 .ToDictionary(t => t.FullName!, t => t);
 
@@ -147,6 +195,8 @@ namespace IVSoftware.Portable.Common
 
             return new ReadOnlyDictionary<string, Type>(added);
         }
+
+        private HashSet<string> Includes { get; } = new(StringComparer.OrdinalIgnoreCase);
 
         private static readonly string[] Excludes =
         [
