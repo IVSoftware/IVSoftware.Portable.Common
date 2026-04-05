@@ -6,7 +6,7 @@
 		<RootNamespace>IVSoftware.Portable.Common</RootNamespace>
 		<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>		
 		
-		<BaseVersion>1.0.2</BaseVersion>
+		<BaseVersion>1.0.1</BaseVersion>
 		<VersionPrefix>$(BaseVersion)-rc</VersionPrefix>
 		
 		<!--netstandard2.0 does not imply a modern C# version so lock it explicitly-->

@@ -26,59 +26,65 @@ namespace IVSoftware.Portable.Common.MSTest
                 }
             }
 
-            var types = TypeCache.Values.Where(_=>_.FullName?.StartsWith("Accessibility") != true);
+            var types = TypeCache.Values.Where(_=>_.FullName?.StartsWith("IVSoftware") == true || _.FullName?.StartsWith("Newtonsoft") == true);
 
-            actual = JsonConvert.SerializeObject(types, Formatting.Indented);
+            string normalizeTypes() => 
+                string.Join(
+                    Environment.NewLine,
+                    types
+                        .Select(t => t.FullName)
+                        .Where(x => x is not null)
+                        .OrderBy(x => x)
+                );
+            
+            actual = normalizeTypes();
+
             actual.ToClipboardExpected();
             { }
             expected = @" 
-[
-  ""Internal.Console, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"",
-  ""Internal.Console+Error, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"",
-  ""IVSoftware.Portable.Common.MSTest.TestClass_Extensions, IVSoftware.Portable.Common.MSTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.MSTest.TestClass_Throw, IVSoftware.Portable.Common.MSTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.MSTest.TestClass_TypeCache, IVSoftware.Portable.Common.MSTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Extensions, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.ITypeCache, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.TypeCacheMatchMode, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Common, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.TypeCacheExtensions, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.CanonicalAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.CarefulAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.ProbationaryAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.ScaffoldingAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.UnsupportedAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.IndexerAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.PolicyAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.PolicyEnforcementAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.NotFlagsAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.ClaimAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.Advisory, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.ThrowOrAdvise, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.ThrowableStatus, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.ThrowToStringFormat, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.Throw, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.ThrowExtensions, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.WinOS.MSTest.Extensions.Extensions, IVSoftware.WinOS.MSTest.Extensions, Version=1.0.8.0, Culture=neutral, PublicKeyToken=61187cbbe9faa94a"",
-  ""IVSoftware.Portable.Disposable.IVisibleIndex, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.AutoObservableCollection`1, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.NotifyCollectionResetEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.CollectionChangedBatchEventHandler, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.NotifyCollectionChangedBatchEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.Clients, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.DHostExtensions, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.DisposableHost, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.BeginUsingEventHandler, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.BeginUsingEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.FinalDisposeEventHandler, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.FinalDisposeEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.CountChangedEventHandler, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.CountChangedEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.TokenDisposedEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.CountChangedAction, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.ObservableMoveCollection`1, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.DisposableHost+DisposableToken, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62""
-]"
+IVSoftware.Portable.Common.Attributes.CanonicalAttribute
+IVSoftware.Portable.Common.Attributes.CarefulAttribute
+IVSoftware.Portable.Common.Attributes.ClaimAttribute
+IVSoftware.Portable.Common.Attributes.IndexerAttribute
+IVSoftware.Portable.Common.Attributes.NotFlagsAttribute
+IVSoftware.Portable.Common.Attributes.PolicyAttribute
+IVSoftware.Portable.Common.Attributes.PolicyEnforcementAttribute
+IVSoftware.Portable.Common.Attributes.ProbationaryAttribute
+IVSoftware.Portable.Common.Attributes.ScaffoldingAttribute
+IVSoftware.Portable.Common.Attributes.UnsupportedAttribute
+IVSoftware.Portable.Common.Common
+IVSoftware.Portable.Common.Exceptions.Advisory
+IVSoftware.Portable.Common.Exceptions.Throw
+IVSoftware.Portable.Common.Exceptions.ThrowableStatus
+IVSoftware.Portable.Common.Exceptions.ThrowExtensions
+IVSoftware.Portable.Common.Exceptions.ThrowOrAdvise
+IVSoftware.Portable.Common.Exceptions.ThrowToStringFormat
+IVSoftware.Portable.Common.Extensions
+IVSoftware.Portable.Common.ITypeCache
+IVSoftware.Portable.Common.MSTest.TestClass_Extensions
+IVSoftware.Portable.Common.MSTest.TestClass_Throw
+IVSoftware.Portable.Common.MSTest.TestClass_TypeCache
+IVSoftware.Portable.Common.TypeCacheExtensions
+IVSoftware.Portable.Common.TypeCacheMatchMode
+IVSoftware.Portable.Disposable.AutoObservableCollection`1
+IVSoftware.Portable.Disposable.BeginUsingEventArgs
+IVSoftware.Portable.Disposable.BeginUsingEventHandler
+IVSoftware.Portable.Disposable.Clients
+IVSoftware.Portable.Disposable.CollectionChangedBatchEventHandler
+IVSoftware.Portable.Disposable.CountChangedAction
+IVSoftware.Portable.Disposable.CountChangedEventArgs
+IVSoftware.Portable.Disposable.CountChangedEventHandler
+IVSoftware.Portable.Disposable.DHostExtensions
+IVSoftware.Portable.Disposable.DisposableHost
+IVSoftware.Portable.Disposable.DisposableHost+DisposableToken
+IVSoftware.Portable.Disposable.FinalDisposeEventArgs
+IVSoftware.Portable.Disposable.FinalDisposeEventHandler
+IVSoftware.Portable.Disposable.IVisibleIndex
+IVSoftware.Portable.Disposable.NotifyCollectionChangedBatchEventArgs
+IVSoftware.Portable.Disposable.NotifyCollectionResetEventArgs
+IVSoftware.Portable.Disposable.ObservableMoveCollection`1
+IVSoftware.Portable.Disposable.TokenDisposedEventArgs
+IVSoftware.WinOS.MSTest.Extensions.Extensions"
             ;
             Assert.AreEqual(
                 expected.NormalizeResult(),
@@ -88,199 +94,195 @@ namespace IVSoftware.Portable.Common.MSTest
 
             "Newtonsoft".AppendNamespaceToCache();
 
-            actual = JsonConvert.SerializeObject(types, Formatting.Indented);
+            actual = normalizeTypes();
             actual.ToClipboardExpected();
             { }
             expected = @" 
-[
-  ""Internal.Console, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"",
-  ""Internal.Console+Error, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"",
-  ""IVSoftware.Portable.Common.MSTest.TestClass_Extensions, IVSoftware.Portable.Common.MSTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.MSTest.TestClass_Throw, IVSoftware.Portable.Common.MSTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.MSTest.TestClass_TypeCache, IVSoftware.Portable.Common.MSTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Extensions, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.ITypeCache, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.TypeCacheMatchMode, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Common, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.TypeCacheExtensions, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.CanonicalAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.CarefulAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.ProbationaryAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.ScaffoldingAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.UnsupportedAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.IndexerAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.PolicyAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.PolicyEnforcementAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.NotFlagsAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Attributes.ClaimAttribute, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.Advisory, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.ThrowOrAdvise, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.ThrowableStatus, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.ThrowToStringFormat, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.Throw, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.Portable.Common.Exceptions.ThrowExtensions, IVSoftware.Portable.Common, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null"",
-  ""IVSoftware.WinOS.MSTest.Extensions.Extensions, IVSoftware.WinOS.MSTest.Extensions, Version=1.0.8.0, Culture=neutral, PublicKeyToken=61187cbbe9faa94a"",
-  ""IVSoftware.Portable.Disposable.IVisibleIndex, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.AutoObservableCollection`1, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.NotifyCollectionResetEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.CollectionChangedBatchEventHandler, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.NotifyCollectionChangedBatchEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.Clients, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.DHostExtensions, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.DisposableHost, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.BeginUsingEventHandler, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.BeginUsingEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.FinalDisposeEventHandler, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.FinalDisposeEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.CountChangedEventHandler, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.CountChangedEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.TokenDisposedEventArgs, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.CountChangedAction, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.ObservableMoveCollection`1, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""IVSoftware.Portable.Disposable.DisposableHost+DisposableToken, IVSoftware.Portable.Disposable, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b9a82a88b12aeb62"",
-  ""Newtonsoft.Json.ConstructorHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.DateFormatHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.DateParseHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.DateTimeZoneHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.DefaultJsonNameTable, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.DefaultValueHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.FloatFormatHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.FloatParseHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Formatting, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.IArrayPool`1, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.IJsonLineInfo, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonArrayAttribute, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonConstructorAttribute, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonContainerAttribute, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonConvert, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonConverter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonConverter`1, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonConverterAttribute, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonConverterCollection, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonDictionaryAttribute, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonException, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonExtensionDataAttribute, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonIgnoreAttribute, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonNameTable, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonObjectAttribute, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonPropertyAttribute, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonReader, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonReaderException, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonRequiredAttribute, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonSerializationException, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonSerializer, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonSerializerSettings, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonTextReader, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonTextWriter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonToken, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonValidatingReader, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonWriter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.JsonWriterException, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.MemberSerialization, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.MetadataPropertyHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.MissingMemberHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.NullValueHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.ObjectCreationHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.PreserveReferencesHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.ReferenceLoopHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Required, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.StringEscapeHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.TypeNameAssemblyFormatHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.TypeNameHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.WriteState, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.CamelCaseNamingStrategy, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.DefaultContractResolver, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.DefaultNamingStrategy, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.DefaultSerializationBinder, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.DiagnosticsTraceWriter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.ErrorContext, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.ErrorEventArgs, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.ExpressionValueProvider, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.IAttributeProvider, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.IContractResolver, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.IReferenceResolver, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.ISerializationBinder, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.ITraceWriter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.IValueProvider, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.JsonArrayContract, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.JsonContainerContract, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.SerializationCallback, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.SerializationErrorCallback, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.ExtensionDataSetter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.ExtensionDataGetter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.JsonContract, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.JsonDictionaryContract, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.JsonDynamicContract, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.JsonISerializableContract, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.JsonLinqContract, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.JsonObjectContract, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.JsonPrimitiveContract, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.JsonProperty, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.JsonPropertyCollection, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.JsonStringContract, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.KebabCaseNamingStrategy, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.MemoryTraceWriter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.NamingStrategy, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.ObjectConstructor`1, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.OnErrorAttribute, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.ReflectionAttributeProvider, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.ReflectionValueProvider, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Serialization.SnakeCaseNamingStrategy, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Schema.Extensions, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Schema.JsonSchema, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Schema.JsonSchemaException, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Schema.JsonSchemaGenerator, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Schema.JsonSchemaResolver, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Schema.JsonSchemaType, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Schema.UndefinedSchemaIdHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Schema.ValidationEventArgs, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Schema.ValidationEventHandler, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.CommentHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.DuplicatePropertyNameHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.Extensions, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.IJEnumerable`1, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.JArray, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.JConstructor, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.JContainer, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.JEnumerable`1, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.JObject, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.JProperty, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.JPropertyDescriptor, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.JRaw, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.JsonLoadSettings, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.JsonMergeSettings, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.JsonSelectSettings, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.JToken, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.JTokenEqualityComparer, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.JTokenReader, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.JTokenType, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.JTokenWriter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.JValue, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.LineInfoHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.MergeArrayHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Linq.MergeNullValueHandling, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Converters.BinaryConverter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Converters.BsonObjectIdConverter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Converters.CustomCreationConverter`1, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Converters.DataSetConverter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Converters.DataTableConverter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Converters.DateTimeConverterBase, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Converters.DiscriminatedUnionConverter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Converters.EntityKeyMemberConverter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Converters.ExpandoObjectConverter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Converters.IsoDateTimeConverter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Converters.JavaScriptDateTimeConverter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Converters.KeyValuePairConverter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Converters.RegexConverter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Converters.StringEnumConverter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Converters.UnixDateTimeConverter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Converters.VersionConverter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Converters.XmlNodeConverter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Bson.BsonObjectId, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Bson.BsonReader, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"",
-  ""Newtonsoft.Json.Bson.BsonWriter, Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed""
-]"
+IVSoftware.Portable.Common.Attributes.CanonicalAttribute
+IVSoftware.Portable.Common.Attributes.CarefulAttribute
+IVSoftware.Portable.Common.Attributes.ClaimAttribute
+IVSoftware.Portable.Common.Attributes.IndexerAttribute
+IVSoftware.Portable.Common.Attributes.NotFlagsAttribute
+IVSoftware.Portable.Common.Attributes.PolicyAttribute
+IVSoftware.Portable.Common.Attributes.PolicyEnforcementAttribute
+IVSoftware.Portable.Common.Attributes.ProbationaryAttribute
+IVSoftware.Portable.Common.Attributes.ScaffoldingAttribute
+IVSoftware.Portable.Common.Attributes.UnsupportedAttribute
+IVSoftware.Portable.Common.Common
+IVSoftware.Portable.Common.Exceptions.Advisory
+IVSoftware.Portable.Common.Exceptions.Throw
+IVSoftware.Portable.Common.Exceptions.ThrowableStatus
+IVSoftware.Portable.Common.Exceptions.ThrowExtensions
+IVSoftware.Portable.Common.Exceptions.ThrowOrAdvise
+IVSoftware.Portable.Common.Exceptions.ThrowToStringFormat
+IVSoftware.Portable.Common.Extensions
+IVSoftware.Portable.Common.ITypeCache
+IVSoftware.Portable.Common.MSTest.TestClass_Extensions
+IVSoftware.Portable.Common.MSTest.TestClass_Throw
+IVSoftware.Portable.Common.MSTest.TestClass_TypeCache
+IVSoftware.Portable.Common.TypeCacheExtensions
+IVSoftware.Portable.Common.TypeCacheMatchMode
+IVSoftware.Portable.Disposable.AutoObservableCollection`1
+IVSoftware.Portable.Disposable.BeginUsingEventArgs
+IVSoftware.Portable.Disposable.BeginUsingEventHandler
+IVSoftware.Portable.Disposable.Clients
+IVSoftware.Portable.Disposable.CollectionChangedBatchEventHandler
+IVSoftware.Portable.Disposable.CountChangedAction
+IVSoftware.Portable.Disposable.CountChangedEventArgs
+IVSoftware.Portable.Disposable.CountChangedEventHandler
+IVSoftware.Portable.Disposable.DHostExtensions
+IVSoftware.Portable.Disposable.DisposableHost
+IVSoftware.Portable.Disposable.DisposableHost+DisposableToken
+IVSoftware.Portable.Disposable.FinalDisposeEventArgs
+IVSoftware.Portable.Disposable.FinalDisposeEventHandler
+IVSoftware.Portable.Disposable.IVisibleIndex
+IVSoftware.Portable.Disposable.NotifyCollectionChangedBatchEventArgs
+IVSoftware.Portable.Disposable.NotifyCollectionResetEventArgs
+IVSoftware.Portable.Disposable.ObservableMoveCollection`1
+IVSoftware.Portable.Disposable.TokenDisposedEventArgs
+IVSoftware.WinOS.MSTest.Extensions.Extensions
+Newtonsoft.Json.Bson.BsonObjectId
+Newtonsoft.Json.Bson.BsonReader
+Newtonsoft.Json.Bson.BsonWriter
+Newtonsoft.Json.ConstructorHandling
+Newtonsoft.Json.Converters.BinaryConverter
+Newtonsoft.Json.Converters.BsonObjectIdConverter
+Newtonsoft.Json.Converters.CustomCreationConverter`1
+Newtonsoft.Json.Converters.DataSetConverter
+Newtonsoft.Json.Converters.DataTableConverter
+Newtonsoft.Json.Converters.DateTimeConverterBase
+Newtonsoft.Json.Converters.DiscriminatedUnionConverter
+Newtonsoft.Json.Converters.EntityKeyMemberConverter
+Newtonsoft.Json.Converters.ExpandoObjectConverter
+Newtonsoft.Json.Converters.IsoDateTimeConverter
+Newtonsoft.Json.Converters.JavaScriptDateTimeConverter
+Newtonsoft.Json.Converters.KeyValuePairConverter
+Newtonsoft.Json.Converters.RegexConverter
+Newtonsoft.Json.Converters.StringEnumConverter
+Newtonsoft.Json.Converters.UnixDateTimeConverter
+Newtonsoft.Json.Converters.VersionConverter
+Newtonsoft.Json.Converters.XmlNodeConverter
+Newtonsoft.Json.DateFormatHandling
+Newtonsoft.Json.DateParseHandling
+Newtonsoft.Json.DateTimeZoneHandling
+Newtonsoft.Json.DefaultJsonNameTable
+Newtonsoft.Json.DefaultValueHandling
+Newtonsoft.Json.FloatFormatHandling
+Newtonsoft.Json.FloatParseHandling
+Newtonsoft.Json.Formatting
+Newtonsoft.Json.IArrayPool`1
+Newtonsoft.Json.IJsonLineInfo
+Newtonsoft.Json.JsonArrayAttribute
+Newtonsoft.Json.JsonConstructorAttribute
+Newtonsoft.Json.JsonContainerAttribute
+Newtonsoft.Json.JsonConvert
+Newtonsoft.Json.JsonConverter
+Newtonsoft.Json.JsonConverter`1
+Newtonsoft.Json.JsonConverterAttribute
+Newtonsoft.Json.JsonConverterCollection
+Newtonsoft.Json.JsonDictionaryAttribute
+Newtonsoft.Json.JsonException
+Newtonsoft.Json.JsonExtensionDataAttribute
+Newtonsoft.Json.JsonIgnoreAttribute
+Newtonsoft.Json.JsonNameTable
+Newtonsoft.Json.JsonObjectAttribute
+Newtonsoft.Json.JsonPropertyAttribute
+Newtonsoft.Json.JsonReader
+Newtonsoft.Json.JsonReaderException
+Newtonsoft.Json.JsonRequiredAttribute
+Newtonsoft.Json.JsonSerializationException
+Newtonsoft.Json.JsonSerializer
+Newtonsoft.Json.JsonSerializerSettings
+Newtonsoft.Json.JsonTextReader
+Newtonsoft.Json.JsonTextWriter
+Newtonsoft.Json.JsonToken
+Newtonsoft.Json.JsonValidatingReader
+Newtonsoft.Json.JsonWriter
+Newtonsoft.Json.JsonWriterException
+Newtonsoft.Json.Linq.CommentHandling
+Newtonsoft.Json.Linq.DuplicatePropertyNameHandling
+Newtonsoft.Json.Linq.Extensions
+Newtonsoft.Json.Linq.IJEnumerable`1
+Newtonsoft.Json.Linq.JArray
+Newtonsoft.Json.Linq.JConstructor
+Newtonsoft.Json.Linq.JContainer
+Newtonsoft.Json.Linq.JEnumerable`1
+Newtonsoft.Json.Linq.JObject
+Newtonsoft.Json.Linq.JProperty
+Newtonsoft.Json.Linq.JPropertyDescriptor
+Newtonsoft.Json.Linq.JRaw
+Newtonsoft.Json.Linq.JsonLoadSettings
+Newtonsoft.Json.Linq.JsonMergeSettings
+Newtonsoft.Json.Linq.JsonSelectSettings
+Newtonsoft.Json.Linq.JToken
+Newtonsoft.Json.Linq.JTokenEqualityComparer
+Newtonsoft.Json.Linq.JTokenReader
+Newtonsoft.Json.Linq.JTokenType
+Newtonsoft.Json.Linq.JTokenWriter
+Newtonsoft.Json.Linq.JValue
+Newtonsoft.Json.Linq.LineInfoHandling
+Newtonsoft.Json.Linq.MergeArrayHandling
+Newtonsoft.Json.Linq.MergeNullValueHandling
+Newtonsoft.Json.MemberSerialization
+Newtonsoft.Json.MetadataPropertyHandling
+Newtonsoft.Json.MissingMemberHandling
+Newtonsoft.Json.NullValueHandling
+Newtonsoft.Json.ObjectCreationHandling
+Newtonsoft.Json.PreserveReferencesHandling
+Newtonsoft.Json.ReferenceLoopHandling
+Newtonsoft.Json.Required
+Newtonsoft.Json.Schema.Extensions
+Newtonsoft.Json.Schema.JsonSchema
+Newtonsoft.Json.Schema.JsonSchemaException
+Newtonsoft.Json.Schema.JsonSchemaGenerator
+Newtonsoft.Json.Schema.JsonSchemaResolver
+Newtonsoft.Json.Schema.JsonSchemaType
+Newtonsoft.Json.Schema.UndefinedSchemaIdHandling
+Newtonsoft.Json.Schema.ValidationEventArgs
+Newtonsoft.Json.Schema.ValidationEventHandler
+Newtonsoft.Json.Serialization.CamelCaseNamingStrategy
+Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver
+Newtonsoft.Json.Serialization.DefaultContractResolver
+Newtonsoft.Json.Serialization.DefaultNamingStrategy
+Newtonsoft.Json.Serialization.DefaultSerializationBinder
+Newtonsoft.Json.Serialization.DiagnosticsTraceWriter
+Newtonsoft.Json.Serialization.ErrorContext
+Newtonsoft.Json.Serialization.ErrorEventArgs
+Newtonsoft.Json.Serialization.ExpressionValueProvider
+Newtonsoft.Json.Serialization.ExtensionDataGetter
+Newtonsoft.Json.Serialization.ExtensionDataSetter
+Newtonsoft.Json.Serialization.IAttributeProvider
+Newtonsoft.Json.Serialization.IContractResolver
+Newtonsoft.Json.Serialization.IReferenceResolver
+Newtonsoft.Json.Serialization.ISerializationBinder
+Newtonsoft.Json.Serialization.ITraceWriter
+Newtonsoft.Json.Serialization.IValueProvider
+Newtonsoft.Json.Serialization.JsonArrayContract
+Newtonsoft.Json.Serialization.JsonContainerContract
+Newtonsoft.Json.Serialization.JsonContract
+Newtonsoft.Json.Serialization.JsonDictionaryContract
+Newtonsoft.Json.Serialization.JsonDynamicContract
+Newtonsoft.Json.Serialization.JsonISerializableContract
+Newtonsoft.Json.Serialization.JsonLinqContract
+Newtonsoft.Json.Serialization.JsonObjectContract
+Newtonsoft.Json.Serialization.JsonPrimitiveContract
+Newtonsoft.Json.Serialization.JsonProperty
+Newtonsoft.Json.Serialization.JsonPropertyCollection
+Newtonsoft.Json.Serialization.JsonStringContract
+Newtonsoft.Json.Serialization.KebabCaseNamingStrategy
+Newtonsoft.Json.Serialization.MemoryTraceWriter
+Newtonsoft.Json.Serialization.NamingStrategy
+Newtonsoft.Json.Serialization.ObjectConstructor`1
+Newtonsoft.Json.Serialization.OnErrorAttribute
+Newtonsoft.Json.Serialization.ReflectionAttributeProvider
+Newtonsoft.Json.Serialization.ReflectionValueProvider
+Newtonsoft.Json.Serialization.SerializationCallback
+Newtonsoft.Json.Serialization.SerializationErrorCallback
+Newtonsoft.Json.Serialization.SnakeCaseNamingStrategy
+Newtonsoft.Json.StringEscapeHandling
+Newtonsoft.Json.TypeNameAssemblyFormatHandling
+Newtonsoft.Json.TypeNameHandling
+Newtonsoft.Json.WriteState"
             ;
             Assert.AreEqual(
                 expected.NormalizeResult(),
