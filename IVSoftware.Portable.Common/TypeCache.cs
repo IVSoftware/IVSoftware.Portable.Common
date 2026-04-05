@@ -2,6 +2,10 @@
 
 namespace IVSoftware.Portable.Common
 {
+    public interface ITypeCache : IReadOnlyDictionary<string, Type>
+    {
+        Type[] this[string key, TypeCacheMatchMode compare = TypeCacheMatchMode.NamespaceStartsWith, bool ignoreCase = false] { get; }
+    }
     public enum TypeCacheMatchMode
     {
         NamespaceStartsWith,
@@ -9,28 +13,36 @@ namespace IVSoftware.Portable.Common
         TypeFullNameEndsWith,
         TypeFullNameExact,
     }
-    class TypeCacheInternal
+    class TypeCacheInternal : ITypeCache
     {
         public TypeCacheInternal()
         {
-            _cache = AppDomain
+            var exportedTypes = AppDomain
             .CurrentDomain
             .GetAssemblies()
-            .SelectMany(a => a.GetExportedTypes())
-            .Where(t =>
-            !t.IsAbstract &&
-            !t.IsGenericType &&
-            Nullable.GetUnderlyingType(t) is null &&
-            (t.Namespace is null || !Excludes.Any(x => t.Namespace.StartsWith(x))))
-            .ToDictionary(t => t.FullName!, t => t);
+            .SelectMany(_ => _.GetExportedTypes())
+            .Where(_ => 
+            {
+                if (_.Namespace is null) return false;
+                if(Excludes.Any(x => _.Namespace.StartsWith(x)))
+                {
+                    return false;
+                }
+                return true;
+            })
+            .ToArray();
+
+            _cache = exportedTypes
+                .Where(t => t.FullName is not null)
+                .ToDictionary(t => t.FullName!, t => t);
         }
-        Dictionary<string, Type> _cache;
+        internal Dictionary<string, Type> _cache;
         public Type[] this[string key, TypeCacheMatchMode compare = TypeCacheMatchMode.NamespaceStartsWith, bool ignoreCase = false]
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(key))
-                    return [];
+                if (string.IsNullOrWhiteSpace(key) || key == "*")
+                    return _cache.Values.ToArray();
 
                 var comparison = ignoreCase
                     ? StringComparison.OrdinalIgnoreCase
@@ -89,29 +101,31 @@ namespace IVSoftware.Portable.Common
 
         public IReadOnlyDictionary<string, Type> AppendNamespaceToCache(
             string @namespace,
-            params string[] moreNamespaces)
+            string[]? moreNamespaces = null,
+            bool ignoreCase = false)
         {
-            if (string.IsNullOrWhiteSpace(@namespace) && (moreNamespaces is null || moreNamespaces.Length == 0))
-                return new ReadOnlyDictionary<string, Type>(new Dictionary<string, Type>());
+            var comparison = ignoreCase
+                ? StringComparison.OrdinalIgnoreCase
+                : StringComparison.Ordinal;
 
             var includes = new[] { @namespace }
                 .Concat(moreNamespaces ?? [])
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .ToArray();
 
+            if (includes.Length == 0)
+                return new ReadOnlyDictionary<string, Type>(new Dictionary<string, Type>());
+
             var added = AppDomain
                 .CurrentDomain
                 .GetAssemblies()
                 .SelectMany(a => a.GetExportedTypes())
                 .Where(t =>
-                    !t.IsAbstract &&
-                    !t.IsGenericType &&
-                    Nullable.GetUnderlyingType(t) is null &&
                     t.Namespace is not null &&
-                    includes.Any(x => t.Namespace.StartsWith(x, StringComparison.Ordinal)))
+                    includes.Any(x => t.Namespace.StartsWith(x, comparison)))
+                .Where(t => t.FullName is not null)
                 .ToDictionary(t => t.FullName!, t => t);
 
-            // merge directly into cache (no indexer)
             foreach (var kvp in added)
             {
                 _cache[kvp.Key] = kvp.Value;
@@ -120,9 +134,14 @@ namespace IVSoftware.Portable.Common
             return new ReadOnlyDictionary<string, Type>(added);
         }
     }
+    public static class Common
+    {
+        public static ITypeCache TypeCache => TypeCacheExtensions.TypeCache;
+    }
+
     public static class TypeCacheExtensions
     {
-        private static TypeCacheInternal TypeCache
+        internal static TypeCacheInternal TypeCache
         {
             get
             {
@@ -136,10 +155,9 @@ namespace IVSoftware.Portable.Common
         static TypeCacheInternal? _typeCache = null;
 
         public static IReadOnlyDictionary<string, Type> AppendNamespaceToCache(
-            this string @namespace,
-            params string[] moreNamespaces)
+            this string @namespace)
         {
-            return TypeCache.AppendNamespaceToCache(@namespace, moreNamespaces);
+            return TypeCache.AppendNamespaceToCache(@namespace);
         }
 
         /// <summary>
