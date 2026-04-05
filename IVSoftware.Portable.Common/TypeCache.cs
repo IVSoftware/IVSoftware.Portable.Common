@@ -1,10 +1,13 @@
-﻿using System.Collections.ObjectModel;
+﻿using IVSoftware.Portable.Common.Attributes;
+using System.Collections.ObjectModel;
 
 namespace IVSoftware.Portable.Common
 {
     public interface ITypeCache : IReadOnlyDictionary<string, Type>
     {
         Type[] this[string key, TypeCacheMatchMode compare = TypeCacheMatchMode.NamespaceStartsWith, bool ignoreCase = false] { get; }
+
+        IReadOnlyDictionary<string, Type> AppendNamespaceToCache(string @namespace, bool ignoreCase = false);
     }
     public enum TypeCacheMatchMode
     {
@@ -18,25 +21,30 @@ namespace IVSoftware.Portable.Common
         public TypeCacheInternal()
         {
             var exportedTypes = AppDomain
-            .CurrentDomain
-            .GetAssemblies()
-            .SelectMany(_ => _.GetExportedTypes())
-            .Where(_ => 
-            {
-                if (_.Namespace is null) return false;
-                if(Excludes.Any(x => _.Namespace.StartsWith(x)))
+                .CurrentDomain
+                .GetAssemblies()
+                .SelectMany(_ => _.GetExportedTypes())
+                .Where(_ =>
                 {
-                    return false;
-                }
-                return true;
-            })
-            .ToArray();
+                    if (_.Namespace is null) return false;
+                    if (Excludes.Any(x => _.Namespace.StartsWith(x, StringComparison.Ordinal)))
+                    {
+                        return false;
+                    }
+                    return true;
+                })
+                .ToArray();
 
             _cache = exportedTypes
                 .Where(t => t.FullName is not null)
                 .ToDictionary(t => t.FullName!, t => t);
         }
+
         internal Dictionary<string, Type> _cache;
+
+        // -------------------------------
+        // ITypeCache indexer (your custom)
+        // -------------------------------
         public Type[] this[string key, TypeCacheMatchMode compare = TypeCacheMatchMode.NamespaceStartsWith, bool ignoreCase = false]
         {
             get
@@ -77,32 +85,38 @@ namespace IVSoftware.Portable.Common
             }
         }
 
-        private static readonly string[] Excludes =
-        [
-            "System",
-            "Microsoft",
-            "Windows",
-            "MS",
-            "SQLite",
-            "Newtonsoft",
-            "Azure",
-            "Google",
-            "Grpc",
-            "Grpc.Core",
-            "JetBrains",
-            "Castle",
-            "Autofac",
-            "Serilog",
-            "NLog",
-            "xunit",
-            "NUnit",
-            "Moq",
-        ];
+        // -------------------------------
+        // IReadOnlyDictionary implementation
+        // -------------------------------
 
+        public Type this[string key] => _cache[key];
+
+        public IEnumerable<string> Keys => _cache.Keys;
+
+        public IEnumerable<Type> Values => _cache.Values;
+
+        public int Count => _cache.Count;
+
+        public bool ContainsKey(string key) => _cache.ContainsKey(key);
+
+        public bool TryGetValue(string key, out Type value) => _cache.TryGetValue(key, out value!);
+
+        public IEnumerator<KeyValuePair<string, Type>> GetEnumerator() => _cache.GetEnumerator();
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => _cache.GetEnumerator();
+
+        // -------------------------------
+        // Append
+        // -------------------------------
+
+        public IReadOnlyDictionary<string, Type> AppendNamespaceToCache(string @namespace, bool ignoreCase = false)
+            => AppendNamespaceToCache(@namespace, null, ignoreCase);
+
+        [Canonical]
         public IReadOnlyDictionary<string, Type> AppendNamespaceToCache(
             string @namespace,
-            string[]? moreNamespaces = null,
-            bool ignoreCase = false)
+            string[]? moreNamespaces,
+            bool ignoreCase)
         {
             var comparison = ignoreCase
                 ? StringComparison.OrdinalIgnoreCase
@@ -133,6 +147,28 @@ namespace IVSoftware.Portable.Common
 
             return new ReadOnlyDictionary<string, Type>(added);
         }
+
+        private static readonly string[] Excludes =
+        [
+            "System",
+            "Microsoft",
+            "Windows",
+            "MS",
+            "SQLite",
+            "Newtonsoft",
+            "Azure",
+            "Google",
+            "Grpc",
+            "Grpc.Core",
+            "JetBrains",
+            "Castle",
+            "Autofac",
+            "Serilog",
+            "NLog",
+            "xunit",
+            "NUnit",
+            "Moq",
+        ];
     }
     public static class Common
     {
@@ -141,7 +177,7 @@ namespace IVSoftware.Portable.Common
 
     public static class TypeCacheExtensions
     {
-        internal static TypeCacheInternal TypeCache
+        internal static ITypeCache TypeCache
         {
             get
             {
