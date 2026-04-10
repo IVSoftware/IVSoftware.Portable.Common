@@ -130,5 +130,6 @@ namespace IVSoftware.Portable.Common.Attributes
         }
         public string GUID { get; }
     }
+
     #endregion I V S    C A N O N I C A L
 }
