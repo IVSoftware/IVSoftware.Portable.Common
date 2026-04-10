@@ -7,7 +7,7 @@
 		<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>		
 		
 		<BaseVersion>1.0.1</BaseVersion>
-		<VersionPrefix>$(BaseVersion)-rc</VersionPrefix>
+		<VersionPrefix>$(BaseVersion)</VersionPrefix>
 		
 		<!--netstandard2.0 does not imply a modern C# version so lock it explicitly-->
 		<LangVersion>latest</LangVersion>
@@ -51,6 +51,9 @@
 			- Added [Claim] attribute for linking ReadMe claims to unit tests.
 			- Added Extension: ToStrongNamedFriendAssembly(this object)
 			- ORIGIN: AppDomain TypeCache with basic features.
+			Stable 1.0.1
+			- Added unit test coverage for the pesky @throw polarity on ThrowFramework.
+			- Not Added: What isn't (and won't be) included is [IFTTT] which will be available canonically in IVSoftware.Portable.Xml.Linq.Collections.
 
 		</PackageReleaseNotes>
 
