@@ -1,4 +1,6 @@
-﻿namespace IVSoftware.Portable.Common
+﻿using IVSoftware.Portable.Common.Exceptions;
+
+namespace IVSoftware.Portable.Common
 {
     public static class Extensions
     {
@@ -12,12 +14,19 @@
         /// </remarks>
         public static string ToStrongNamedFriendAssembly(this object @this)
         {
+            if (@this is Type)
+            {
+                return "Policy Violation: Cannot make a friend class designation for an instance of Type.";
+            }
+
             var asm = @this.GetType().Assembly;
             var name = asm.GetName();
             var publicKey = name.GetPublicKey();
 
             if (publicKey is null || publicKey.Length == 0)
-                throw new InvalidOperationException("Assembly is not strong-named.");
+            {
+                return "Policy Violation: Assembly must be strong-named.";
+            }
 
             var hex = BitConverter
                 .ToString(publicKey)
