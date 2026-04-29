@@ -5,12 +5,13 @@ namespace IVSoftware.Portable.Common
     public static class Extensions
     {
         /// <summary>
-        /// Generates an InternalsVisibleTo declaration for the runtime assembly of the instance.
+        /// Generates a copy-ready <c>InternalsVisibleTo</c> declaration for the assembly associated with the instance.
         /// </summary>
         /// <remarks>
+        /// - Intended for ephemeral code-generation workflows where the resulting attribute text is copied into source.
         /// - Uses the assembly identity of <c>@this</c> to produce a friend assembly string.
-        /// - Emits the full strong-name public key (not the token) as required by the attribute.
-        /// - Throws if the assembly is not strong-named.
+        /// - Emits the full strong-name public key, not the public key token, as required by <c>InternalsVisibleTo</c>.
+        /// - Returns a policy-violation sentinel string when called on an instance of <see cref="Type"/> or when the assembly is not strong-named.
         /// </remarks>
         public static string ToStrongNamedFriendAssembly(this object @this)
         {
