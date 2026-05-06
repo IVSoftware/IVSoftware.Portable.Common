@@ -1,8 +1,8 @@
 ﻿using IVSoftware.Portable.Common.Attributes;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Reflection;
 
 namespace IVSoftware.Portable.Common.Exceptions
 {
@@ -396,30 +396,34 @@ namespace IVSoftware.Portable.Common.Exceptions
             // Stable searchable id
             var id = $"{enumType.Name}.{policyMember}";
 
-            if (policyEnforcement == ThrowOrAdvise.Advisory)
+            var ex =
+                Activator.CreateInstance(policyExceptionType, [msg]) as Exception
+                ?? new Exception(msg);
+
+            var e = new Throw(ex, id, null, policyEnforcement, policyMember);
+
+            if (policyEnforcement == ThrowOrAdvise.ThrowSoft)
             {
-                return sender.Advisory(id, msg, caller);
+                e.Handled = true;
             }
 
-            var methodName = policyEnforcement switch
+            e.RaiseSelf(sender, e);
+
+            if (policyEnforcement == ThrowOrAdvise.Advisory)
             {
-                ThrowOrAdvise.ThrowFramework => nameof(ThrowFramework),
-                ThrowOrAdvise.ThrowSoft => nameof(ThrowSoft),
-                _ => nameof(ThrowHard),
-            };
+                if (!e.Handled)
+                {
+                    Debug.WriteLine(e.FormattedMessage);
+                }
+                return e;
+            }
 
-            var method = typeof(ThrowExtensions)
-                .GetMethods(BindingFlags.Public | BindingFlags.Static)
-                .First(m =>
-                    m.Name == methodName &&
-                    m.IsGenericMethodDefinition &&
-                    m.GetGenericArguments().Length == 1);
+            if (!e.Handled)
+            {
+                throw ex;
+            }
 
-            var generic = method.MakeGenericMethod(policyExceptionType);
-
-            return (Throw)generic.Invoke(
-                null,
-                new object?[] { sender, id, msg, null, caller })!;
+            return e;
         }
     }
 }

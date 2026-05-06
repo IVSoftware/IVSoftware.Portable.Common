@@ -19,15 +19,28 @@ namespace IVSoftware.Portable.Common.Exceptions
             string? messageId,
             bool? @throw,
             [CallerMemberName] string? caller = null)
+            : this(
+                  ex,
+                  messageId,
+                  @throw,
+                  Enum.TryParse(caller, out ThrowOrAdvise mode) ? mode : 0,
+                  policyError: null)
+        { }
+
+        [Canonical]
+        internal Throw(
+            Exception ex,
+            string? messageId,
+            bool? @throw,
+            ThrowOrAdvise mode,
+            Enum? policyError)
         {
             Exception = ex;
             Message = ex?.Message ?? "No information is available about this error.";
             MessageId = messageId!;
             ThrowRequestedAtCallSite = @throw;
-            Mode =
-                Enum.TryParse(caller, out ThrowOrAdvise mode)
-                ? mode
-                : 0;
+            Mode = mode;
+            PolicyError = policyError;
         }
 
         public ThrowOrAdvise Mode { get; }
