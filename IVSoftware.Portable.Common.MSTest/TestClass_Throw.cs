@@ -211,9 +211,9 @@ DETECTED POLICY TestPolicy.SoftCase"
 
             void subtest_AdvisoryCase()
             {
-                Assert.IsTrue(
+                Assert.IsFalse(
                     this.ThrowPolicyException(TestPolicy.AdvisoryCase).Handled,
-                    $"Expecting {nameof(Throw)} is handled."
+                    $"Expecting {nameof(Throw)} is *not handled* falling through to debug write."
                 );
 
                 actual = string.Join(Environment.NewLine, builderThrow); builderThrow.Clear();
