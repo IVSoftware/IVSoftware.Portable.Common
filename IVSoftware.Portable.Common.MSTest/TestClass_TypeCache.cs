@@ -50,6 +50,7 @@ IVSoftware.Portable.Common.Attributes.NotFlagsAttribute
 IVSoftware.Portable.Common.Attributes.PolicyAttribute
 IVSoftware.Portable.Common.Attributes.PolicyEnforcementAttribute
 IVSoftware.Portable.Common.Attributes.ProbationaryAttribute
+IVSoftware.Portable.Common.Attributes.PublishedContractAttribute
 IVSoftware.Portable.Common.Attributes.ScaffoldingAttribute
 IVSoftware.Portable.Common.Attributes.UnsupportedAttribute
 IVSoftware.Portable.Common.Common
@@ -59,6 +60,7 @@ IVSoftware.Portable.Common.Exceptions.ThrowableStatus
 IVSoftware.Portable.Common.Exceptions.ThrowExtensions
 IVSoftware.Portable.Common.Exceptions.ThrowOrAdvise
 IVSoftware.Portable.Common.Exceptions.ThrowToStringFormat
+IVSoftware.Portable.Common.Exceptions.Win32Message
 IVSoftware.Portable.Common.Extensions
 IVSoftware.Portable.Common.ITypeCache
 IVSoftware.Portable.Common.MSTest.TestClass_Extensions
@@ -106,6 +108,7 @@ IVSoftware.Portable.Common.Attributes.NotFlagsAttribute
 IVSoftware.Portable.Common.Attributes.PolicyAttribute
 IVSoftware.Portable.Common.Attributes.PolicyEnforcementAttribute
 IVSoftware.Portable.Common.Attributes.ProbationaryAttribute
+IVSoftware.Portable.Common.Attributes.PublishedContractAttribute
 IVSoftware.Portable.Common.Attributes.ScaffoldingAttribute
 IVSoftware.Portable.Common.Attributes.UnsupportedAttribute
 IVSoftware.Portable.Common.Common
@@ -115,6 +118,7 @@ IVSoftware.Portable.Common.Exceptions.ThrowableStatus
 IVSoftware.Portable.Common.Exceptions.ThrowExtensions
 IVSoftware.Portable.Common.Exceptions.ThrowOrAdvise
 IVSoftware.Portable.Common.Exceptions.ThrowToStringFormat
+IVSoftware.Portable.Common.Exceptions.Win32Message
 IVSoftware.Portable.Common.Extensions
 IVSoftware.Portable.Common.ITypeCache
 IVSoftware.Portable.Common.MSTest.TestClass_Extensions

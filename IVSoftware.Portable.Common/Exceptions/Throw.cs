@@ -39,6 +39,15 @@ namespace IVSoftware.Portable.Common.Exceptions
 
         public static event EventHandler<Throw>? BeginThrowOrAdvise;
         public Exception? Exception { get; }
+        
+        /// <summary>
+        /// Gets the policy enum member that originated this throw, if any.
+        /// </summary>
+        /// <remarks>
+        /// This remains null for throws that do not come from policy-based
+        /// enforcement.
+        /// </remarks>
+        public Enum? PolicyError { get; }
 
         [Careful("Do 'not' generate automatically.")]
         public string MessageId { get; } = "[Caller]";

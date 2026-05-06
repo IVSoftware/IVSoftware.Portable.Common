@@ -15,12 +15,26 @@ public class TestClass_Extensions
         actual.ToClipboardExpected();
         { }
         expected = @" 
-[assembly: InternalsVisibleTo(""System.Private.CoreLib, PublicKey=00240000048000009400000006020000002400005253413100040000010001008d56c76f9e8649383049f383c44be0ec204181822a6c31cf5eb7ef486944d032188ea1d3920763712ccb12d75fb77e9811149e6148e5d32fbaab37611c1878ddc19e20ef135d0cb2cff2bfec3d115810c3d9069638fe4be215dbf795861920e5ab6f7db2e2ceef136ac23d5dd2bf031700aec232f6c6b1c785b4305c123b37ab"")]";
+Policy Violation: Cannot make a friend class designation for an instance of Type."
+        ;
 
         Assert.AreEqual(
             expected.NormalizeResult(),
             actual.NormalizeResult(),
-            "Expecting result to match."
+            "Expecting reported inadvertent use of `typeof`."
+        );
+
+        actual = Newtonsoft.Json.Formatting.Indented.ToStrongNamedFriendAssembly();
+        actual.ToClipboardExpected();
+        { }
+        expected = @" 
+[assembly: InternalsVisibleTo(""Newtonsoft.Json, PublicKey=0024000004800000940000000602000000240000525341310004000001000100f561df277c6c0b497d629032b410cdcf286e537c054724f7ffa0164345f62b3e642029d7a80cc351918955328c4adc8a048823ef90b0cf38ea7db0d729caf2b633c3babe08b0310198c1081995c19029bc675193744eab9d7345b8a67258ec17d112cebdbbb2a281487dceeafb9d83aa930f32103fbe1d2911425bc5744002c7"")]"
+        ;
+
+        Assert.AreEqual(
+            expected.NormalizeResult(),
+            actual.NormalizeResult(),
+            "Expecting reported inadvertent use of `typeof`."
         );
     }
 }

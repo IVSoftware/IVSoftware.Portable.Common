@@ -349,6 +349,15 @@ namespace IVSoftware.Portable.Common.Exceptions
             }
         }
 
+        /// <summary>
+        /// Raises the exception or advisory defined by a policy enum member.
+        /// </summary>
+        /// <remarks>
+        /// The enum type may declare the exception type with
+        /// <see cref="PolicyAttribute"/>, while the member may declare the
+        /// enforcement level with <see cref="PolicyEnforcementAttribute"/>
+        /// and the message with <see cref="DescriptionAttribute"/>.
+        /// </remarks>
         public static Throw ThrowPolicyException(
             this object? sender,
             Enum policyMember,

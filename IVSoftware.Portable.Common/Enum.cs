@@ -65,4 +65,17 @@
         MSTest = Mode | ExceptionType | MessageId | Message,
         Forensic = Mode | ExceptionType | MessageId | Message | StackTrace | InnerException,
     }
+
+    public enum Win32Message
+    {
+        WM_MOUSEMOVE = 0x0200,
+        WM_MOUSELEAVE = 0x02A3,
+        WM_NCMOUSEMOVE = 0x00A0,
+        WM_MOUSEHOVER = 0x02A1,
+        WM_LBUTTONDOWN = 0x0201,
+        WM_LBUTTONUP = 0x0202,
+        WM_RBUTTONDOWN = 0x0204,
+        WM_RBUTTONUP = 0x0205,
+        WM_CONTEXTMENU = 0x007B,
+    }
 }
