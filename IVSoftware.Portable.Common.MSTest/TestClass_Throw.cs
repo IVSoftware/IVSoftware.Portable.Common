@@ -151,7 +151,10 @@ Handled=True Object reference not set to an instance of an object."
             void localOnBeginThrowOrAdvise(object? sender, Throw e)
             {
                 builderThrow.Add(e.ToString());
-                e.Handled = true;
+                if (e.Mode == ThrowOrAdvise.ThrowHard)
+                {
+                    e.Handled = true;
+                }
                 switch (e.PolicyError)
                 {
                     case null:
