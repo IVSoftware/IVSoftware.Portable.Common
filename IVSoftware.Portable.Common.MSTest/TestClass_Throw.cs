@@ -142,10 +142,10 @@ Handled=True Object reference not set to an instance of an object."
         }
 
         [TestMethod]
-        public void Test_ThrowPolicyException_ExposesPolicyError()
+        public void Test_ThrowPolicyException()
         {
             string actual, expected;
-
+            Throw returned;
             List<string> builderThrow = new();
 
             void localOnBeginThrowOrAdvise(object? sender, Throw e)
@@ -189,9 +189,10 @@ Handled=True Object reference not set to an instance of an object."
             void subtest_SoftCase()
             {
                 Assert.IsTrue(
-                    this.ThrowPolicyException(TestPolicy.SoftCase).Handled,
+                    (returned = this.ThrowPolicyException(TestPolicy.SoftCase)).Handled,
                     $"Expecting {nameof(Throw)} is handled."
                 );
+                Assert.IsInstanceOfType<Throw>(returned);
 
                 actual = string.Join(Environment.NewLine, builderThrow); builderThrow.Clear();
                 actual.ToClipboardExpected();
@@ -211,10 +212,12 @@ DETECTED POLICY TestPolicy.SoftCase"
 
             void subtest_AdvisoryCase()
             {
+                
                 Assert.IsFalse(
-                    this.ThrowPolicyException(TestPolicy.AdvisoryCase).Handled,
+                    (returned = this.ThrowPolicyException(TestPolicy.AdvisoryCase)).Handled,
                     $"Expecting {nameof(Throw)} is *not handled* falling through to debug write."
                 );
+                Assert.IsInstanceOfType<Advisory>(returned);
 
                 actual = string.Join(Environment.NewLine, builderThrow); builderThrow.Clear();
                 actual.ToClipboardExpected();

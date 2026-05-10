@@ -68,6 +68,19 @@ These carry intent and documentation value without enforcing runtime behavior.
 
 ---
 
+### Extensions
+
+`ToStrongNamedFriendAssembly(...)` generates a copy-ready
+`InternalsVisibleTo` declaration for the assembly associated with an
+instance.
+
+It is intended for source-authoring workflows where a caller needs the full
+strong-name public key text for a friend assembly declaration. If called on a
+`Type` instance, or on an assembly that is not strong-named, it returns a
+policy-violation message instead.
+
+---
+
 ### Type Cache
 
 `TypeCache` provides a lightweight reflection index over the types currently
