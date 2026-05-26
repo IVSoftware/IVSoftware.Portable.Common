@@ -8,7 +8,7 @@
 		
 		<BaseVersion>1.1.0</BaseVersion>
 		<VersionPrefix>$(BaseVersion)</VersionPrefix>
-		<VersionSuffix>rc</VersionSuffix>
+		<VersionSuffix></VersionSuffix>
 		
 		<!--netstandard2.0 does not imply a modern C# version so lock it explicitly-->
 		<LangVersion>latest</LangVersion>
@@ -34,7 +34,7 @@
 		<PackageIcon>ivs-nuget-logo.4.png</PackageIcon>
 
 		<PackageReleaseNotes>
-			1.1.0-beta
+			1.1.0
 			- Added enum-driven policy throwing with PolicyAttribute,
 			  PolicyEnforcementAttribute, and ThrowPolicyException.
 			- Added PolicyError to Throw so consumers can pattern match on
