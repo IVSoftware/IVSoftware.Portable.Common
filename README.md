@@ -68,6 +68,64 @@ These carry intent and documentation value without enforcing runtime behavior.
 
 ---
 
+### Extensions
+
+`ToStrongNamedFriendAssembly(...)` generates a copy-ready
+`InternalsVisibleTo` declaration for the assembly associated with an
+instance.
+
+It is intended for source-authoring workflows where a caller needs the full
+strong-name public key text for a friend assembly declaration. If called on a
+`Type` instance, or on an assembly that is not strong-named, it returns a
+policy-violation message instead.
+
+---
+
+### Type Cache
+
+`TypeCache` provides a lightweight reflection index over the types currently
+visible in the AppDomain. It is useful when a package needs to discover or
+match types by name without taking a hard project reference.
+
+This is especially helpful for optional lateral integrations, where one
+assembly may want to recognize a domain type from another assembly only when
+that assembly is already present.
+
+Core pieces:
+
+- `Common.TypeCache` exposes the current cache as an `ITypeCache`.
+- `GetAppDomainTypes(...)` queries the cache using a match pattern.
+- `AppendNamespaceToCache(...)` adds namespace-prefixed types from already
+  loaded assemblies and records that namespace for future `AssemblyLoad`
+  events.
+
+Important behavior:
+
+- `GetAppDomainTypes(...)` defaults to
+  `TypeCacheMatchMode.NamespaceStartsWith`.
+- If you are looking for a type by name, choose an explicit mode such as
+  `TypeFullNameExact` or `TypeFullNameEndsWith`.
+- `AppendNamespaceToCache(...)` does not load assemblies by itself. It only
+  indexes assemblies that are already loaded into the current AppDomain, plus
+  any later assemblies that raise `AssemblyLoad`.
+
+Typical usage:
+
+```csharp
+"IVSoftware.Portable.Collections.Events"
+    .AppendNamespaceToCache();
+
+var typeChanging =
+    "IVSoftware.Portable.Collections.Events.NotifyCollectionChangingEventArgs"
+    .GetAppDomainTypes(TypeCacheMatchMode.TypeFullNameExact)
+    .Single();
+```
+
+That pattern allows a caller to perform inheritance-aware matching against a
+known runtime type without introducing a compile-time reference.
+
+---
+
 ### Purpose
 
 `IVSoftware.Portable.Common` is intentionally minimal.  

@@ -1,8 +1,8 @@
 ﻿using IVSoftware.Portable.Common.Attributes;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Reflection;
 
 namespace IVSoftware.Portable.Common.Exceptions
 {
@@ -299,6 +299,85 @@ namespace IVSoftware.Portable.Common.Exceptions
         }
 
         /// <summary>
+        /// Raises the exception or advisory defined by a policy enum member.
+        /// </summary>
+        /// <remarks>
+        /// The enum type may declare the exception type with
+        /// <see cref="PolicyAttribute"/>, while the member may declare the
+        /// enforcement level with <see cref="PolicyEnforcementAttribute"/>
+        /// and the message with <see cref="DescriptionAttribute"/>.
+        /// </remarks>
+        public static Throw ThrowPolicyException(
+            this object? sender,
+            Enum policyMember,
+            [CallerMemberName] string? caller = null)
+        {
+            sender ??= policyMember;
+
+            var enumType = policyMember.GetType();
+
+            // Policy enums must not be [Flags]
+            if (enumType.GetCustomAttribute<FlagsAttribute>() is not null)
+            {
+                return sender.ThrowHard<InvalidOperationException>(
+                    messageOnly: $"Policy enum {enumType.Name} must not be marked with [Flags].",
+                    caller: caller);
+            }
+
+            // Enforcement level
+            var policyEnforcement =
+                policyMember.GetCustomAttribute<PolicyEnforcementAttribute>() is { } attrP
+                ? attrP.Level
+                : ThrowOrAdvise.ThrowHard;
+
+            // Exception type declared at enum level
+            var policyExceptionType =
+                enumType.GetCustomAttribute<PolicyAttribute>() is { } attrE
+                ? attrE.ExceptionType
+                : typeof(InvalidOperationException);
+
+            // Message
+            var msg =
+                policyMember.GetCustomAttribute<DescriptionAttribute>() is { } attrM
+                ? attrM.Description
+                : policyMember.ToString();
+
+            // Stable searchable id
+            var id = $"{enumType.Name}.{policyMember}";
+
+            if (policyEnforcement == ThrowOrAdvise.Advisory)
+            {
+                var advisory = new Advisory(new Exception(msg), id, policyMember);
+                advisory.RaiseSelf(sender, advisory);
+                if (!advisory.Handled)
+                {
+                    Debug.WriteLine(advisory.FormattedMessage);
+                }
+                return advisory;
+            }
+
+            var ex =
+                Activator.CreateInstance(policyExceptionType, [msg]) as Exception
+                ?? new Exception(msg);
+
+            var e = new Throw(ex, id, null, policyEnforcement, policyMember);
+
+            if (policyEnforcement == ThrowOrAdvise.ThrowSoft)
+            {
+                e.Handled = true;
+            }
+
+            e.RaiseSelf(sender, e);
+
+            if (!e.Handled)
+            {
+                throw ex;
+            }
+
+            return e;
+        }
+
+        /// <summary>
         /// Retrieves a single attribute applied to the enum member.
         /// </summary>
         /// <remarks>
@@ -347,70 +426,6 @@ namespace IVSoftware.Portable.Common.Exceptions
                         $"Member is ambiguous: {type.Name}.{@this}");
                     return null;
             }
-        }
-
-        public static Throw ThrowPolicyException(
-            this object? sender,
-            Enum policyMember,
-            [CallerMemberName] string? caller = null)
-        {
-            sender ??= policyMember;
-
-            var enumType = policyMember.GetType();
-
-            // Policy enums must not be [Flags]
-            if (enumType.GetCustomAttribute<FlagsAttribute>() is not null)
-            {
-                return sender.ThrowHard<InvalidOperationException>(
-                    messageOnly: $"Policy enum {enumType.Name} must not be marked with [Flags].",
-                    caller: caller);
-            }
-
-            // Enforcement level
-            var policyEnforcement =
-                policyMember.GetCustomAttribute<PolicyEnforcementAttribute>() is { } attrP
-                ? attrP.Level
-                : ThrowOrAdvise.ThrowHard;
-
-            // Exception type declared at enum level
-            var policyExceptionType =
-                enumType.GetCustomAttribute<PolicyAttribute>() is { } attrE
-                ? attrE.ExceptionType
-                : typeof(InvalidOperationException);
-
-            // Message
-            var msg =
-                policyMember.GetCustomAttribute<DescriptionAttribute>() is { } attrM
-                ? attrM.Description
-                : policyMember.ToString();
-
-            // Stable searchable id
-            var id = $"{enumType.Name}.{policyMember}";
-
-            if (policyEnforcement == ThrowOrAdvise.Advisory)
-            {
-                return sender.Advisory(id, msg, caller);
-            }
-
-            var methodName = policyEnforcement switch
-            {
-                ThrowOrAdvise.ThrowFramework => nameof(ThrowFramework),
-                ThrowOrAdvise.ThrowSoft => nameof(ThrowSoft),
-                _ => nameof(ThrowHard),
-            };
-
-            var method = typeof(ThrowExtensions)
-                .GetMethods(BindingFlags.Public | BindingFlags.Static)
-                .First(m =>
-                    m.Name == methodName &&
-                    m.IsGenericMethodDefinition &&
-                    m.GetGenericArguments().Length == 1);
-
-            var generic = method.MakeGenericMethod(policyExceptionType);
-
-            return (Throw)generic.Invoke(
-                null,
-                new object?[] { sender, id, msg, null, caller })!;
         }
     }
 }

@@ -6,8 +6,9 @@
 		<RootNamespace>IVSoftware.Portable.Common</RootNamespace>
 		<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>		
 		
-		<BaseVersion>1.0.1</BaseVersion>
+		<BaseVersion>1.1.1</BaseVersion>
 		<VersionPrefix>$(BaseVersion)</VersionPrefix>
+		<VersionSuffix></VersionSuffix>
 		
 		<!--netstandard2.0 does not imply a modern C# version so lock it explicitly-->
 		<LangVersion>latest</LangVersion>
@@ -24,37 +25,24 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Author>Thomas C. Gregor</Author>
 		<Owner>IVSoftware LLC</Owner>
-		<Copyright>Copyright © 2025 IVSoftware LLC</Copyright>
+		<Copyright>Copyright © 2025-2026 IVSoftware LLC</Copyright>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<Version>$(AssemblyVersion)</Version>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-		<PackageIcon>ivs.code-ape.64x64.png</PackageIcon>
+		<PackageIcon>ivs-nuget-logo.8.png</PackageIcon>
 
 		<PackageReleaseNotes>
-			Initial 1.0.0-beta release
-			- Provides foundational exception and advisory signaling for Release-mode packages.
-			- Includes metadata attributes shared across IVSoftware NuGet packages.
-			1.0.0-rc1
-			- ADDED supported framework: netstandard2.0
-			Stable 1.0.0
-			- added missing 'event' keyword to 'BeginThrowOrAdvise'
-			Beta release 1.0.1
-			- Added [Policy] and [PolicyEnforcement] attributes for declarative policy metadata.
-			- Introduced ThrowPolicyException extension to route policy violations through canonical Throw/Advisory pathways.
-			- Enforced non-[Flags] constraint for Policy enums to preserve atomic violation semantics.
-			- No breaking changes.
-			Release Candidate 1.0.1
-			- Fixed @throw polarity on ThrowFramework
-			- Added [NotFlags] as an opt-in enforcement mechanism for enums that are intended for parsing by field name.
-			- Added [Claim] attribute for linking ReadMe claims to unit tests.
-			- Added Extension: ToStrongNamedFriendAssembly(this object)
-			- ORIGIN: AppDomain TypeCache with basic features.
-			Stable 1.0.1
-			- Added unit test coverage for the pesky @throw polarity on ThrowFramework.
-			- Not Added: What isn't (and won't be) included is [IFTTT] which will be available canonically in IVSoftware.Portable.Xml.Linq.Collections.
-
+			1.1.x
+			- Added enum-driven policy throwing with PolicyAttribute,
+			  PolicyEnforcementAttribute, and ThrowPolicyException.
+			- Added PolicyError to Throw so consumers can pattern match on
+			  the originating enum member.
+			- Added PublishedContractAttribute, NotFlagsAttribute, and
+			  ClaimAttribute.
+			- Added Win32Message and ToStrongNamedFriendAssembly(this object).
+			- Added AppDomain TypeCache baseline functionality.
 		</PackageReleaseNotes>
 
 		<AssemblyOriginatorKeyFile>D:\PFX\231201.ivs.pfx</AssemblyOriginatorKeyFile>
@@ -72,18 +60,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\IVSoftware.Portable.Common\img\ivs.code-ape.64x64.png" >
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-	</ItemGroup>
-
-	<ItemGroup>
 		<None Include="..\README.md">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
 
+	<ItemGroup>
+		<None Include="..\IVSoftware.Portable.Common\img\ivs-nuget-logo.8.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 </Project>
 
