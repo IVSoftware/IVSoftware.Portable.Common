@@ -24,6 +24,7 @@ namespace IVSoftware.Portable.Common
             var exportedTypes = AppDomain
                 .CurrentDomain
                 .GetAssemblies()
+                .Where(a => !a.IsDynamic)
                 .SelectMany(_ => _.GetExportedTypes())
                 .Where(_ =>
                 {
@@ -42,6 +43,10 @@ namespace IVSoftware.Portable.Common
 
             AppDomain.CurrentDomain.AssemblyLoad += (sender, e) =>
             {
+                // Expression compilation creates transient dynamic assemblies.
+                // Android cannot enumerate their exported types, even at load time.
+                if (e.LoadedAssembly.IsDynamic) return;
+
                 Type[] types;
 
                 try
@@ -177,6 +182,7 @@ namespace IVSoftware.Portable.Common
             var added = AppDomain
                 .CurrentDomain
                 .GetAssemblies()
+                .Where(a => !a.IsDynamic)
                 .SelectMany(a => a.GetExportedTypes())
                 .Where(t =>
                 {

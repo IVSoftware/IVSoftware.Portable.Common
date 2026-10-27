@@ -123,6 +123,12 @@ Core pieces:
 
 Important behavior:
 
+- Starting with `1.1.2-rc`, discovery excludes dynamic assemblies during initial
+  enumeration, later assembly loads, and namespace append. Runtime-generated
+  expression assemblies are transient implementation details; Android does not
+  support enumerating their exported types. Ordinary loaded assemblies retain
+  their existing discovery behavior. No public API changes.
+
 - `GetAppDomainTypes(...)` defaults to
   `TypeCacheMatchMode.NamespaceStartsWith`.
 - If you are looking for a type by name, choose an explicit mode such as

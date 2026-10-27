@@ -8,7 +8,7 @@
 		
 		<BaseVersion>1.1.2</BaseVersion>
 		<VersionPrefix>$(BaseVersion)</VersionPrefix>
-		<VersionSuffix>beta</VersionSuffix>
+		<VersionSuffix>rc</VersionSuffix>
 		
 		<!-- C# language version and nullable reference analysis are compiler settings,
 		     independent of the target framework. Latest C# and Nullable=enable work
@@ -36,6 +36,15 @@
 		<PackageIcon>ivs-nuget-logo.8.png</PackageIcon>
 
 		<PackageReleaseNotes>
+			1.1.2-rc
+			- Exclude dynamic assemblies from initial TypeCache discovery, later
+			  AssemblyLoad notifications, and explicit namespace append.
+			- Avoid unsupported exported-type reflection during Android LINQ
+			  expression compilation without suppressing debugger diagnostics.
+			- Add regression coverage for dynamic assemblies before discovery,
+			  late loads, namespace append, and expression compilation.
+			- Preserve the public API and netstandard2.0 target.
+
 			1.1.2-beta
 			- Removed the redundant net8.0 asset; netstandard2.0 remains available
 			  to compatible consumers, including .NET 8. No public API changes.

@@ -1,4 +1,8 @@
-﻿using IVSoftware.WinOS.MSTest.Extensions;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Linq.Expressions;
+using System.Runtime.ExceptionServices;
+using IVSoftware.WinOS.MSTest.Extensions;
 using Newtonsoft.Json;
 using static IVSoftware.Portable.Common.Common;
 
@@ -7,6 +11,74 @@ namespace IVSoftware.Portable.Common.MSTest
     [TestClass]
     public class TestClass_TypeCache
     {
+        [TestMethod]
+        [DoNotParallelize]
+        public void DynamicAssemblyBeforeDiscoveryIsExcluded()
+        {
+            DefineTransientType();
+            var cache = CreateIndependentCache();
+            AssertOrdinaryDiscovery(cache);
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void DynamicAssemblyAfterDiscoveryAndNamespaceAppendIsExcluded()
+        {
+            var cache = CreateIndependentCache();
+            DefineTransientType();
+            var appended = cache.AppendNamespaceToCache("IVSoftware");
+            Assert.IsFalse(appended.Values.Any(type => type.Assembly.IsDynamic));
+            AssertOrdinaryDiscovery(cache);
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public void ExpressionCompilationDoesNotRaiseUnsupportedDiscoveryExceptions()
+        {
+            var cache = CreateIndependentCache();
+            int unsupported = 0;
+            void Observe(object? sender, FirstChanceExceptionEventArgs args)
+            {
+                if (args.Exception is NotSupportedException)
+                    System.Threading.Interlocked.Increment(ref unsupported);
+            }
+            AppDomain.CurrentDomain.FirstChanceException += Observe;
+            try
+            {
+                Expression<Func<int>> expression = () => 42;
+                Assert.AreEqual(42, expression.Compile()());
+                cache.AppendNamespaceToCache("IVSoftware");
+                AssertOrdinaryDiscovery(cache);
+                Assert.AreEqual(0, unsupported, "Caught first-chance exceptions still interrupt an attached debugger.");
+            }
+            finally
+            {
+                AppDomain.CurrentDomain.FirstChanceException -= Observe;
+            }
+        }
+
+        // Construct a cold cache independently of suite order without widening the
+        // production API. Like Common.TypeCache, these instances live for the process.
+        private static ITypeCache CreateIndependentCache() =>
+            (ITypeCache)Activator.CreateInstance(typeof(ITypeCache).Assembly.GetType(
+                "IVSoftware.Portable.Common.TypeCacheInternal", throwOnError: true)!, nonPublic: true)!;
+
+        private static void DefineTransientType()
+        {
+            string name = "TypeCacheProbe" + Guid.NewGuid().ToString("N");
+            var assembly = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(name), AssemblyBuilderAccess.Run);
+            assembly.DefineDynamicModule(name).DefineType("IVSoftware.Transient." + name,
+                TypeAttributes.Public).CreateType();
+        }
+
+        private static void AssertOrdinaryDiscovery(ITypeCache cache)
+        {
+            Assert.IsTrue(cache.TryGetValue(typeof(ITypeCache).FullName!, out var cachedType));
+            Assert.AreEqual(typeof(ITypeCache), cachedType);
+            Assert.IsFalse(cache.Values.Any(type => type.Assembly.IsDynamic),
+                "Transient runtime types must not enter ordinary discovery.");
+        }
+
         [TestMethod]
         public void Test_TypeCache()
         {
