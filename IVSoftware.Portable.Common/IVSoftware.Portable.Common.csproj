@@ -4,13 +4,16 @@
 		<Title>IVSoftware.Portable.Common</Title>
 		<PackageId>IVSoftware.Portable.Common</PackageId>
 		<RootNamespace>IVSoftware.Portable.Common</RootNamespace>
-		<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>		
+		<TargetFramework>netstandard2.0</TargetFramework>
 		
 		<BaseVersion>1.1.2</BaseVersion>
 		<VersionPrefix>$(BaseVersion)</VersionPrefix>
 		<VersionSuffix>beta</VersionSuffix>
 		
-		<!--netstandard2.0 does not imply a modern C# version so lock it explicitly-->
+		<!-- C# language version and nullable reference analysis are compiler settings,
+		     independent of the target framework. Latest C# and Nullable=enable work
+		     with netstandard2.0 without a separate net8.0 target or runtime dependency.
+		     Individual language features can still require newer runtime support. -->
 		<LangVersion>latest</LangVersion>
 		
 		<Description>
@@ -34,6 +37,8 @@
 
 		<PackageReleaseNotes>
 			1.1.2-beta
+			- Removed the redundant net8.0 asset; netstandard2.0 remains available
+			  to compatible consumers, including .NET 8. No public API changes.
 			- Added Barcode.NewBarcode() and Barcode.Create(DateTimeOffset) for
 			  optional, infrequently generated physical-item label payloads.
 			- Added BarcodeFormat.UtcTimestamp (default: yyMMdd-HHmm-AAAA) and
