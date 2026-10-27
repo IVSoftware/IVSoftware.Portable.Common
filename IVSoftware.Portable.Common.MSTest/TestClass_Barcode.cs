@@ -7,6 +7,33 @@ namespace IVSoftware.Portable.Common.MSTest;
 public class TestClass_Barcode
 {
     [TestMethod]
+    public void DefaultEnumValueSelectsAdvertisedUtcTimestamp()
+    {
+        Assert.AreEqual(BarcodeFormat.UtcTimestamp, default(BarcodeFormat));
+        var timestamp = new DateTimeOffset(2026, 10, 27, 1, 45, 0, TimeSpan.Zero);
+        StringAssert.StartsWith(Barcode.Create(timestamp, default), "261027-0145-");
+    }
+
+    [TestMethod]
+    public void RandomLettersPreservesGroupingWithoutTimestampDigits()
+    {
+        var timestamp = new DateTimeOffset(2026, 10, 27, 1, 45, 0, TimeSpan.Zero);
+        for (var index = 0; index < 200; index++)
+        {
+            Assert.IsTrue(Regex.IsMatch(Barcode.Create(timestamp, BarcodeFormat.RandomLetters),
+                "^[A-Z]{6}-[A-Z]{4}-[A-Z]{4}$"));
+        }
+        Assert.IsTrue(Regex.IsMatch(Barcode.NewBarcode(BarcodeFormat.RandomLetters),
+            "^[A-Z]{6}-[A-Z]{4}-[A-Z]{4}$"));
+    }
+
+    [TestMethod]
+    public void UnsupportedFormatIsRejectedAsCallerMisuse()
+    {
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => Barcode.NewBarcode((BarcodeFormat)99));
+    }
+
+    [TestMethod]
     public void FormatsUtcWithFourUppercaseLetters()
     {
         var timestamp = new DateTimeOffset(2026, 10, 27, 1, 45, 10, TimeSpan.Zero);
