@@ -1,4 +1,4 @@
-﻿using IVSoftware.Portable.Common.Exceptions;
+using IVSoftware.Portable.Common.Exceptions;
 
 namespace IVSoftware.Portable.Common
 {
@@ -8,10 +8,17 @@ namespace IVSoftware.Portable.Common
         /// Generates a copy-ready <c>InternalsVisibleTo</c> declaration for the assembly associated with the instance.
         /// </summary>
         /// <remarks>
-        /// - Intended for ephemeral code-generation workflows where the resulting attribute text is copied into source.
+        /// - Development-time source authoring: copy the generated InternalsVisibleTo annotation into source.
+        ///   This helper is not intended for production runtime policy enforcement.
         /// - Uses the assembly identity of <c>@this</c> to produce a friend assembly string.
         /// - Emits the full strong-name public key, not the public key token, as required by <c>InternalsVisibleTo</c>.
-        /// - Returns a policy-violation sentinel string when called on an instance of <see cref="Type"/> or when the assembly is not strong-named.
+        /// - Pass an instance from the intended assembly, not typeof(...): GetType() on a Type object
+        ///   identifies its runtime implementation rather than the assembly represented by that Type.
+        /// - Type objects and unsigned assemblies return "Policy Violation:" text instead of an annotation.
+        ///   These diagnostics do not raise Throw.BeginThrowOrAdvise; inspect the result before copying it.
+        /// - Introduced April 5, 2026 (9110d06), originally throwing for unsigned assemblies.
+        ///   April 29 (ef9e285) added the intentional Type guard and replaced the unsigned-assembly
+        ///   exception with diagnostic text. That exception-to-string change affects behavioral compatibility.
         /// </remarks>
         public static string ToStrongNamedFriendAssembly(this object @this)
         {

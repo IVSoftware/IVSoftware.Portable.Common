@@ -8,6 +8,11 @@
 		<UseWindowsForms>true</UseWindowsForms>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(RunLocalTests)' == 'true'">
+		<OutputType>Exe</OutputType>
+		<EnableMSTestRunner>true</EnableMSTestRunner>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="IVSoftware.Portable.Disposable" Version="2.0.0-beta" />
 		<PackageReference Include="IVSoftware.WinOS.MSTest.Extensions" Version="1.0.8" />

@@ -74,10 +74,32 @@ These carry intent and documentation value without enforcing runtime behavior.
 `InternalsVisibleTo` declaration for the assembly associated with an
 instance.
 
-It is intended for source-authoring workflows where a caller needs the full
-strong-name public key text for a friend assembly declaration. If called on a
-`Type` instance, or on an assembly that is not strong-named, it returns a
-policy-violation message instead.
+This is a development-time source-authoring convenience: generate the annotation
+with its full strong-name public key, then copy it into source. Its intended use
+does not involve production runtime policy enforcement.
+
+Pass an instance from the intended assembly, such as
+`Newtonsoft.Json.Formatting.Indented.ToStrongNamedFriendAssembly()`.
+Passing `typeof(Newtonsoft.Json.Formatting)` is rejected because calling
+`GetType()` on that object identifies the runtime implementation of `Type`,
+rather than the assembly containing `Formatting`.
+
+Both a `Type` argument and an unsigned assembly produce a returned string beginning
+with `Policy Violation:` instead of an annotation. These messages do **not** enter
+the `Throw.BeginThrowOrAdvise` stream. Inspect the returned text before copying it.
+
+History and compatibility context:
+
+- Introduced April 5, 2026, in `9110d06`; included in the `1.0.1-rc` release
+  commit `debbdb3` that afternoon. The original helper threw
+  `InvalidOperationException` for unsigned assemblies and had no `Type` guard.
+- On April 29, `ef9e285` added the intentional safeguard against `Type` misuse
+  and replaced the unsigned-assembly exception with returned diagnostic text.
+  The signature stayed the same, but both changes affect behavior; an existing
+  catch block no longer handles the unsigned-assembly case.
+- The source-authoring workflow explains the usefulness of readable diagnostics.
+  The historical commit groups both guards as misuse warnings, but does not
+  separately explain why the unsigned-assembly exception was replaced.
 
 ---
 
