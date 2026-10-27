@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<Title>IVSoftware.Portable.Common</Title>
@@ -33,6 +33,20 @@
 		<PackageIcon>ivs-nuget-logo.8.png</PackageIcon>
 
 		<PackageReleaseNotes>
+			1.1.2-beta
+			- Added Barcode.NewBarcode() and Barcode.Create(DateTimeOffset) for
+			  optional, infrequently generated physical-item label payloads.
+			- Added BarcodeFormat.UtcTimestamp (default: yyMMdd-HHmm-AAAA) and
+			  BarcodeFormat.RandomLetters (AAAAAA-AAAA-AAAA), both 16 characters.
+			- Uses cryptographic randomness with unbiased letter sampling;
+			  uniqueness is probabilistic, not guaranteed. Generate once and
+			  persist the payload for reuse. Barcode/QR rendering is consumer-owned.
+			- Added eight focused barcode tests and an opt-in direct MSTest runner.
+			- Clarified ToStrongNamedFriendAssembly as a development-time annotation
+			  helper. Its existing Type/unsigned-assembly diagnostics are returned
+			  strings outside the Throw/Advisory stream; no helper behavior changed
+			  in this release.
+
 			1.1.x
 			- Added enum-driven policy throwing with PolicyAttribute,
 			  PolicyEnforcementAttribute, and ThrowPolicyException.
